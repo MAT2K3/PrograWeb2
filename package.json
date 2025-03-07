@@ -9,7 +9,7 @@
   "keywords": [
     "PRUEBAS"
   ],
-  "author": "Marcelo Almaguer",
+  "author": "Marcelo Almaguer - Karla Castañeda",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",

@@ -1,29 +1,27 @@
 const mongoose = require('mongoose');
-const uri = 'mongodb://localhost:27017/test';
-const express = require('express'); const app = express(); const port = 8080;
-const bodyParser = require('body-parser');
-// support parsing of application/json type post data
-mongoose.connect('mongodb://localhost:27017/test', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('Conexión exitosa a MongoDB');
-  
-  //Configuración de bodyParser
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+const uri = 'mongodb://useradmin:grupo52PW2_AD2024@xorgx11.com:27017/DATABASE?authSource=admin&readPreference=primary&ssl=false';
+const express = require('express'); 
+const app = express(); 
+const port = 8080;
+const bodyParser = require('body-parser'); //Middleware para procesar datos de formularios y json
 
-  //Ruta simple para comprobar
-  app.get('/', (req, res) => {
-    res.send('Si jala omaigod');
-  });
+mongoose.connect(uri)
+  .then(() => {
+    console.log('Conexión exitosa a MongoDB');
 
-  // Inicio del servidor Express
-  app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
+    app.use(bodyParser.json()); //Permite procesar datos json en las peticiones
+    app.use(bodyParser.urlencoded({ extended: true })); //Permite recibir datos de formularios html
+
+    //Ruta simple para comprobar
+    app.get('/', (req, res) => {
+      res.send('Si jala omaigod');
+    });
+
+    //Inicio del servidor Express
+    app.listen(port, () => {
+      console.log(`Servidor escuchando en http://localhost:${port}`);
+    });
+  })
+  .catch(error => {
+    console.error('Error al conectar a MongoDB:', error);
   });
-})
-.catch(error => {
-  console.error('Error al conectar a MongoDB:', error);
-});
