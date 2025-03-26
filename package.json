@@ -1,0 +1,19 @@
+{
+  "name": "pw2-backend",
+  "version": "1.0.0",
+  "description": "Backend con node para PW2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "PRUEBAS"
+  ],
+  "author": "Marcelo Almaguer - Karla Castañeda",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {}
+}
