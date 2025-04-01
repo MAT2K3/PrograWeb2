@@ -1,38 +1,53 @@
-const mongoose = require('mongoose');
 const express = require('express'); 
-const path = require('path'); // IMPORTANTE: Asegura que path está incluido
+const path = require('path');
 const bodyParser = require('body-parser');
+const userRoutes = require("./routes/userRoutes");
+const connectDB = require('./database'); // Importa la conexión a MongoDB
+const cors = require("cors");
+const multer = require('multer')
 
-const app = express(); 
+const app = express();
 const port = 8080;
 
-const uri = 'mongodb://useradmin:grupo52PW2_AD2024@xorgx11.com:27017/DATABASE?authSource=admin&readPreference=primary&ssl=false';
+// Conectar a la base de datos
+connectDB();
 
-mongoose.connect(uri)
-  .then(() => {
-    console.log('✅ Conexión exitosa a MongoDB');
+// Configuración de multer para la carga de archivos
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
+  },
+  filename: (req, file, cb) => {
+    // Guardar el archivo con un nombre único basado en la fecha y el nombre original del archivo
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
 
-    app.use(bodyParser.json()); 
-    app.use(bodyParser.urlencoded({ extended: true })); 
+// Usamos multer para manejar archivos de imagen
+const upload = multer({ storage });
 
-    // Servir archivos estáticos del frontend de React
-    app.use(express.static(path.join(__dirname, '../client/build')));
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-    // Ruta de prueba para verificar la conexión entre frontend y backend
-    app.get('/api/status', (req, res) => {
-      res.json({ message: '✅ Cliente y servidor están conectados' });
-    });
+// Rutas API
+app.use("/api/users", userRoutes);
 
-    // Ruta para servir la aplicación React en cualquier otra ruta
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../client/build/index.html'));
-    });
+// Servir archivos estáticos del frontend de React
+app.use(express.static(path.join(__dirname, '../client/build')));
 
-    // Iniciar servidor Express
-    app.listen(port, () => {
-      console.log(`🚀 Servidor corriendo en: http://localhost:${port}`);
-    });
-  })
-  .catch(error => {
-    console.error('❌ Error al conectar a MongoDB:', error);
-  });
+// Ruta de prueba
+app.get('/api/status', (req, res) => {
+  res.json({ message: '✅ Cliente y servidor están conectados' });
+});
+
+// Ruta para servir la aplicación React
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
+// Iniciar servidor Express
+app.listen(port, () => {
+  console.log(`🚀 Servidor corriendo en: http://localhost:${port}`);
+});
