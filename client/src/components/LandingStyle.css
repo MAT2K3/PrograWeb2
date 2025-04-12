@@ -1,0 +1,120 @@
+/* Start https://www.cursors-4u.com */ 
+* {
+    cursor: url(https://cur.cursors-4u.net/cursors/cur-9/cur830.cur), auto !important;
+} 
+/* End https://www.cursors-4u.com */
+
+@font-face {
+    font-family: 'Arial Pixel';
+    src: url('PIXEARG_.TTF') format('truetype');
+}
+
+* {
+    letter-spacing: 1.5px;
+    font-size: xx-small;
+    font-family: 'Arial Pixel';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    line-height: 1.5;
+    color: #333;
+    background-color: #c5c5c5;
+    display: flex;
+    justify-content: center;
+}
+
+.Lnd-container {
+    width: 800px;
+    min-height: 100vh;
+    background-color: #e3e3e3;
+    border: 3px outset #F3F3F3;
+    text-align: center;
+    padding: 20px;
+}
+
+.Lnd-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e3e3e3;
+    padding: 10px;
+    border: 7px inset #F3F3F3;
+}
+
+.Lnd-logo-image {
+    height: 40px;
+}
+
+.Lnd-hero-image {
+    width: 90%;
+    max-width: 450px;
+    height: auto;
+    margin: 20px auto 10px auto;
+    display: block;
+    background-color: #fafafa;
+}
+
+.Lnd-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.Lnd-nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.Lnd-hero {
+    margin: 10px;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 10px;
+    background: white radial-gradient(circle at 0 0, #b3d3e850 2px, transparent 0);
+    background-size: 4px 4px;
+    border: 3px outset #F3F3F3;
+}
+
+.Lnd-cta-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #57687e;
+    color: white;
+    text-decoration: none;
+    border: 3px ridge rgb(94, 94, 94);
+}
+
+.Lnd-cta-button:hover {
+    background-color: #607f97;
+}
+
+.Lnd-about, .Lnd-features, .Lnd-contact {
+    margin: 10px;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 10px;
+    background: white radial-gradient(circle at 0 0, #b3d3e850 2px, transparent 0);
+    background-size: 4px 4px;
+    border: 3px outset #F3F3F3;
+}
+
+.Lnd-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.Lnd-features ul li {
+    margin-top: 5px;
+}
+
+.Lnd-footer {
+    margin-top: 20px;
+    padding: 10px;
+    background: repeating-linear-gradient(45deg, #BFDBFE, #BFDBFE 10px, #DBEAFE 10px, #DBEAFE 20px);
+    text-align: center;
+    border: 1px solid #000;
+}

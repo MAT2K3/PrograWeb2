@@ -1,53 +1,51 @@
-const express = require('express'); 
-const path = require('path');
-const bodyParser = require('body-parser');
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
-const connectDB = require('./database'); // Importa la conexión a MongoDB
+const connectDB = require("./database");
 const cors = require("cors");
-const multer = require('multer')
+const multer = require("multer");
+const fs = require("fs");
 
 const app = express();
 const port = 8080;
 
-// Conectar a la base de datos
 connectDB();
 
-// Configuración de multer para la carga de archivos
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    // Guardar el archivo con un nombre único basado en la fecha y el nombre original del archivo
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
-// Usamos multer para manejar archivos de imagen
 const upload = multer({ storage });
 
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-// Rutas API
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use("/api/users", userRoutes);
 
-// Servir archivos estáticos del frontend de React
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, "../client/build")));
 
-// Ruta de prueba
-app.get('/api/status', (req, res) => {
-  res.json({ message: '✅ Cliente y servidor están conectados' });
+app.get("/api/status", (req, res) => {
+  res.json({ message: "✅ Cliente y servidor están conectados" });
 });
 
-// Ruta para servir la aplicación React
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-// Iniciar servidor Express
 app.listen(port, () => {
   console.log(`🚀 Servidor corriendo en: http://localhost:${port}`);
 });

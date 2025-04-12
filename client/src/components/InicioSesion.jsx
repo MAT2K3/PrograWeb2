@@ -1,5 +1,5 @@
 import React from 'react';
-import './InicioStyle.css';  // Asegúrate de que la ruta a tu archivo CSS es correcta
+import './InicioStyle.css';
 import { Link } from 'react-router-dom';
 
 const InicioSesion = () => {

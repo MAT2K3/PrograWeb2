@@ -4,7 +4,6 @@ const registerUser = async (req, res) => {
   try {
     const { username, nombres, apllpat, apllmat, correo, contra, fechanacimiento, rol } = req.body;
 
-    // Extraer el archivo subido por multer
     const avatar = req.file ? `/uploads/${req.file.filename}` : null;
     const extension = req.file ? req.file.mimetype.split("/")[1] : null;
 

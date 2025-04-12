@@ -29,12 +29,12 @@ function Registro() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const extension = file.name.split('.').pop(); // Extraer extensión
+      const extension = file.name.split('.').pop();
       setFileName(file.name);
       setFormData((prev) => ({
         ...prev,
-        avatar: file,  // Guardar el archivo correctamente
-        extension: extension, // Guardar extensión en el estado
+        avatar: file,
+        extension: extension,
       }));
     }
   };
@@ -65,14 +65,12 @@ function Registro() {
         console.log(pair[0], pair[1]);
       }
   
-      // Realizar la solicitud POST al servidor
       const response = await fetch("http://localhost:8080/api/users/register", {
         method: "POST",
         body: data,
       });
   
-      // Leer directamente la respuesta como JSON
-      const result = await response.json(); // Aquí solo intentamos leer como JSON
+      const result = await response.json();
   
       console.log("Respuesta del servidor (JSON):", result);
   
