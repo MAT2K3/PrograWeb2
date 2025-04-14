@@ -36,14 +36,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/users", userRoutes);
 
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "../client/public")));
 
 app.get("/api/status", (req, res) => {
   res.json({ message: "✅ Cliente y servidor están conectados" });
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  res.sendFile(path.join(__dirname, "../client/public/index.html"));
 });
 
 app.listen(port, () => {

@@ -22,13 +22,27 @@ body{
     padding: 15px;
 }
 
-.wrapper{
+.div-container {
+    display: flex; /* Para alinear los elementos horizontalmente */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.wrapper {
     width: 420px;
     background: lightgray;
-    box-shadow: 0 0 10px rgba(255,255,255,.2);
+    box-shadow: 0 0 10px rgba(255, 255, 255, .2);
     color: black;
     border: 7px ridge #bbbbbb;
     padding: 30px 40px;
+    margin-left: 20px; /* Separación entre la imagen y el formulario */
+}
+
+img {
+    width: 180px; /* Asegúrate de que la imagen tenga el tamaño adecuado */
+    height: 180px;
+    margin-right: 20px; /* Espacio entre la imagen y el formulario */
 }
 
 .wrapper h1{
