@@ -37,6 +37,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/users", userRoutes);
 
 app.use(express.static(path.join(__dirname, "../client/public")));
+app.use("/uploads", express.static("uploads"));
 
 app.get("/api/status", (req, res) => {
   res.json({ message: "✅ Cliente y servidor están conectados" });

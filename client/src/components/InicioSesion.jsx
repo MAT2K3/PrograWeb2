@@ -45,6 +45,8 @@ function InicioSesion() {
 
     if (response.ok) {
       console.log("✅ Inicio de sesión exitoso");
+      localStorage.setItem("usuario", JSON.stringify(result.user));
+      console.log("🧾 Datos completos del usuario:", result.user);
       navigate("/Busqueda"); 
     } else {
       console.error("❌ Error en login:", result.message);

@@ -1,5 +1,6 @@
 import React from 'react';
 import './LandingStyle.css';
+import { Link } from 'react-router-dom';
 
 function Landing() {
   return (
@@ -18,7 +19,7 @@ function Landing() {
       <section className="Lnd-hero">
         <h1>Bienvenido a 8BitTreasures</h1>
         <p>Encuentra y vende consolas clásicas con facilidad.</p>
-        <a href="#explore" className="Lnd-cta-button">Explorar</a>
+        <Link to="/InicioSesion" className="Lnd-cta-button">Explorar</Link>
       </section>
 
       <img src="banner.jpeg" alt="Consolas retro" className="Lnd-hero-image" />

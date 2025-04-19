@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './BusquedaAvanzada.css';
+import { Link } from 'react-router-dom';
 
 function BusquedaAvanzada() {
+  const [usuario, setUsuario] = useState(null);
+  
+    useEffect(() => {
+      const storedUser = localStorage.getItem("usuario");
+      if (storedUser) {
+        setUsuario(JSON.parse(storedUser));
+      }
+    }, []);
+
   return (
     <div className="BA-container">
       <div className="BA-main-header">
@@ -32,11 +42,11 @@ function BusquedaAvanzada() {
       <main>
         <div className="BA-container-inner">
           <div className="BA-profile-box">
-            <h2>EliWoods (•̀. •́ )و</h2>
-            <img className="BA-profile-image" src="maka.jpg" alt="Perfil" />
+            <h2>{usuario ? usuario.username : "Cargando..."}</h2>
+            <img className="Prfl-profile-image" src={usuario?.avatar} />
             <ul>
               <li><a href="#">Inicio</a></li>
-              <li><a href="#">Mi perfil</a></li>
+              <li><Link to = "/Profile">Mi perfil</Link></li>
               <li><a href="#">Amigos</a></li>
               <li><a href="#">Contacto</a></li>
             </ul>

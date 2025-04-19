@@ -59,7 +59,14 @@ const loginUser = async (req, res) => {
         username: user.username,
         rol: user.rol,
         nombres: user.nombres,
-        avatar: user.avatar
+        correo: user.correo,
+        contra: user.contra,
+        apllpat: user.apllpat,
+        apllmat: user.apllmat,
+        fechanacimiento: user.fechanacimiento,
+        avatar: user.avatar,
+        extension: user.extension,
+        fecharegistro: user.fecharegistro
       }
     });
   } catch (error) {
@@ -68,4 +75,66 @@ const loginUser = async (req, res) => {
   }
 }; 
 
-module.exports = { registerUser, loginUser };
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const {
+      username,
+      nombres,
+      apllpat,
+      apllmat,
+      correo,
+      contra,
+      fechanacimiento,
+    } = req.body;
+
+    // Verificar qué datos estamos recibiendo
+    console.log("Datos recibidos para actualizar:");
+    console.log({
+      username,
+      nombres,
+      apllpat,
+      apllmat,
+      correo,
+      contra,
+      fechanacimiento,
+    });
+
+    const avatar = req.file ? `/uploads/${req.file.filename}` : undefined;
+    const extension = req.file ? req.file.mimetype.split("/")[1] : undefined;
+
+    const updatedFields = {
+      username,
+      nombres,
+      apllpat,
+      apllmat,
+      correo,
+      contra,
+      fechanacimiento,
+    };
+
+    // Solo actualiza el avatar si se subió uno nuevo
+    if (avatar) {
+      updatedFields.avatar = avatar;
+      updatedFields.extension = extension;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({
+      message: "Usuario actualizado con éxito",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("❌ Error actualizando usuario:", error);
+    res.status(500).json({ message: "Error del servidor", error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, updateUser };
