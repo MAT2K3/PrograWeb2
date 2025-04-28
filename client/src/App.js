@@ -22,6 +22,7 @@ function App() {
         <Route path="/Busqueda" element={<BusquedaAvanzada />} />
         <Route path="/Carrito" element={<Carrito />} />
         <Route path="/Profile" element={<Profile />} />
+        <Route path="*" element={<Landing />} />
       </Routes>
     </Router>
   );
