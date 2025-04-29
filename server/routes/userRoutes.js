@@ -18,5 +18,6 @@ const upload = multer({ storage });
 router.post("/register", upload.single("avatar"), userController.registerUser);
 router.post("/login", userController.loginUser);
 router.put("/actualizar/:id", upload.single("image"), userController.updateUser);
+router.get("/vendedores", userController.getVendedores);
 
 module.exports = router;

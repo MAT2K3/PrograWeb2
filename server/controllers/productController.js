@@ -28,16 +28,56 @@ const registrarProducto = async (req, res) => {
 };
 
 const obtenerProductosPorUsuario = async (req, res) => {
-    try {
-      const { user_id } = req.params; // lo recibiremos por params
+  try {
+    const { user_id } = req.params; // lo recibiremos por params
   
-      const productos = await Product.find({ publicador: user_id });
+    const productos = await Product.find({ publicador: user_id });
   
-      res.status(200).json(productos);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al obtener productos del usuario." });
-    }
-  };
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener productos del usuario." });
+  }
+};
 
-module.exports = { registrarProducto, obtenerProductosPorUsuario };
+const getProductosFiltrados = async (req, res) => {
+  try {
+    const { nombre, fecha_inicio, fecha_fin, vendedor, plataforma } = req.query;
+    let filtro = {};
+
+    // Filtrar por nombre
+    if (nombre) {
+      filtro.nombre = { $regex: nombre, $options: "i" }; // Búsqueda insensible a mayúsculas
+    }
+
+    // Filtrar por fechas (fechapublicado)
+    if (fecha_inicio && fecha_fin) {
+      filtro.fechapublicado = { $gte: new Date(fecha_inicio), $lte: new Date(fecha_fin) };
+    } else if (fecha_inicio) {
+      filtro.fechapublicado = { $gte: new Date(fecha_inicio) };
+    } else if (fecha_fin) {
+      filtro.fechapublicado = { $lte: new Date(fecha_fin) };
+    }
+
+    // Filtrar por vendedor (publicador)
+    if (vendedor) {
+      filtro.publicador = vendedor; // Asegúrate de pasar el ObjectId de un vendedor
+    }
+
+    // Filtrar por plataforma
+    if (plataforma) {
+      filtro.plataforma = plataforma;
+    }
+
+    // Obtener los productos filtrados desde la base de datos
+    const productos = await Product.find(filtro);
+
+    // Responder con los productos encontrados
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error("❌ Error al obtener productos filtrados:", error);
+    res.status(500).json({ message: "Error del servidor", error: error.message });
+  }
+};
+
+module.exports = { registrarProducto, obtenerProductosPorUsuario, getProductosFiltrados };

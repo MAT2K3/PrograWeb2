@@ -137,4 +137,14 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, updateUser };
+const getVendedores = async (req, res) => {
+  try {
+    const vendedores = await User.find({ rol: "vendedor" }).select("username _id");
+    res.status(200).json(vendedores);
+  } catch (error) {
+    console.error("❌ Error al obtener vendedores:", error);
+    res.status(500).json({ message: "Error al obtener los vendedores", error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, updateUser, getVendedores };

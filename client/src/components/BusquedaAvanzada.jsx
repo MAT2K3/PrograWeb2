@@ -1,16 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import './BusquedaAvanzada.css';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function BusquedaAvanzada() {
   const [usuario, setUsuario] = useState(null);
+  const [vendedores, setVendedores] = useState([]);
+  const [nombre, setNombre] = useState('');
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [fechaFin, setFechaFin] = useState('');
+  const [vendedor, setVendedor] = useState('');
+  const [plataforma, setPlataforma] = useState('');
+  const [productos, setProductos] = useState([]);
   
-    useEffect(() => {
-      const storedUser = localStorage.getItem("usuario");
-      if (storedUser) {
-        setUsuario(JSON.parse(storedUser));
-      }
-    }, []);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("usuario");
+    if (storedUser) {
+      setUsuario(JSON.parse(storedUser));
+    }
+
+    fetch("http://localhost:8080/api/users/vendedores")
+    .then(res => res.json())
+    .then(data => setVendedores(data))
+    .catch(err => console.error("Error al obtener vendedores:", err));
+  }, []);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    console.log("Búsqueda realizada con los siguientes filtros:");
+    console.log("Texto de búsqueda:", nombre);
+    console.log("Fecha inicio:", fechaInicio);
+    console.log("Fecha fin:", fechaFin);
+    console.log("Vendedor:", vendedor);
+    console.log("Plataforma:", plataforma);
+
+    try {
+      const response = await axios.get('http://localhost:8080/api/products/buscar', {
+        params: {
+          nombre,
+          fecha_inicio: fechaInicio,
+          fecha_fin: fechaFin,
+          vendedor,
+          plataforma
+        }
+      });
+      console.log('Respuesta de productos:', response.data);
+      setProductos(response.data);
+    } catch (error) {
+      console.error('Error al obtener los productos:', error);
+    }
+  };
+
+  const formatFecha = (fecha) => {
+    const date = new Date(fecha);
+    if (isNaN(date)) {
+      return "Fecha no válida";
+    }
+  
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Asegura que el mes sea de 2 dígitos
+    const day = date.getDate().toString().padStart(2, "0"); // Asegura que el día sea de 2 dígitos
+  
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <div className="BA-container">
@@ -56,30 +109,30 @@ function BusquedaAvanzada() {
         <div className="BA-container-inner-right">
           <div className="BA-search-form">
             <h2>Búsqueda avanzada</h2>
-            <form action="#" method="POST" encType="multipart/form-data">
+            <form onSubmit={handleSearch}>
               <label htmlFor="BA-busqueda">Texto de búsqueda:</label>
-              <input type="text" id="BA-busqueda" name="busqueda" placeholder="Ingrese búsqueda..." />
+              <input type="text" id="BA-busqueda" name="busqueda" placeholder="Ingrese búsqueda..." value={nombre} onChange={(e) => setNombre(e.target.value)}/>
 
               <label htmlFor="BA-fecha_inicio">Fecha Inicio:</label>
-              <input type="date" id="BA-fecha_inicio" name="fecha_inicio" />
+              <input type="date" id="BA-fecha_inicio" name="fecha_inicio" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)}/>
 
               <label htmlFor="BA-fecha_fin">Fecha Fin:</label>
-              <input type="date" id="BA-fecha_fin" name="fecha_fin" />
+              <input type="date" id="BA-fecha_fin" name="fecha_fin" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)}/>
 
               <label htmlFor="BA-vendedor">Seleccionar Vendedor:</label>
-              <select id="BA-vendedor" name="vendedor">
+              <select id="BA-vendedor" name="vendedor" value={vendedor} onChange={(e) => setVendedor(e.target.value)}>
                 <option value="">Seleccionar vendedor</option>
-                <option value="vendedor1">Vendedor 1</option>
-                <option value="vendedor2">Vendedor 2</option>
-                <option value="vendedor3">Vendedor 3</option>
-                <option value="vendedor4">Vendedor 4</option>
+                {vendedores.map(v => (
+                <option key={v._id} value={v._id}>{v.username}</option>
+                ))}
               </select>
 
-              <label htmlFor="BA-category">Categoría:</label>
-              <select id="BA-category" name="category">
-                <option value="general">General</option>
-                <option value="movies">Películas</option>
-                <option value="books">Libros</option>
+              <label htmlFor="BA-category">Plataforma:</label>
+              <select id="BA-category" name="platforma" value={plataforma} onChange={(e) => setPlataforma(e.target.value)}>
+              <option value="">General</option>
+                <option value="nintendo">Nintendo</option>
+                <option value="sega">Sega</option>
+                <option value="microsoft">Microsoft</option>
               </select>
 
               <input type="submit" value="Buscar" />
@@ -89,10 +142,18 @@ function BusquedaAvanzada() {
           <div className="BA-posts">
             <h2>Resultados de la búsqueda:</h2>
             <div className="BA-post-container">
-              <h2>Pack Nintendo</h2>
-              <p>Hola, es mi primera publicación, el pack contiene varias Nintendos 3DS.</p>
-              <img src="publi.jpg" alt="Imagen de la publicación" />
-              <p>Fecha: <span className="BA-date">2 de Febrero de 2025</span></p>
+              {productos.length > 0 ? (
+                productos.map((producto) => (
+                  <div key={producto._id}>
+                    <h2>{producto.nombre}</h2>
+                    <p>{producto.descripcion}</p>
+                    <img src={producto.foto || 'default.jpg'} alt="Imagen de la publicación" />
+                    <p>Fecha: <span className="BA-date">{formatFecha(producto.fechapublicado)}</span></p>
+                  </div>
+                ))
+              ) : (
+                <p>No se encontraron productos con los filtros aplicados.</p>
+              )}
             </div>
           </div>
         </div>
