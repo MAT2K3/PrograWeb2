@@ -124,11 +124,23 @@ function Profile() {
           </nav>
         </header>
         <nav className="Prfl-second-nav">
-          <ul>
+        <ul>
             <li><a href="#">Inicio</a></li>
             <li><a href="#">Buscar</a></li>
             <li><a href="#">Mensajes</a></li>
-            <li><a href="#">Blog</a></li>
+            {usuario && usuario.rol === 'vendedor' && (
+              <>
+              <li><a href="#">Productos</a></li>
+              <li><a href="#">Ventas</a></li>
+              </>
+            )}
+
+            {usuario && usuario.rol === 'comprador' && (
+              <>
+              <li><a href="#">Carrito</a></li>
+              <li><a href="#">Compras</a></li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

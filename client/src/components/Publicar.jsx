@@ -106,11 +106,23 @@ function Publicar() {
         </header>
 
         <nav className="Pub-second-nav">
-          <ul>
+        <ul>
             <li><a href="#">Inicio</a></li>
             <li><a href="#">Buscar</a></li>
-            <li><a href="#">Ventas</a></li>
             <li><a href="#">Mensajes</a></li>
+            {usuario && usuario.rol === 'vendedor' && (
+              <>
+              <li><a href="#">Productos</a></li>
+              <li><a href="#">Ventas</a></li>
+              </>
+            )}
+
+            {usuario && usuario.rol === 'comprador' && (
+              <>
+              <li><a href="#">Carrito</a></li>
+              <li><a href="#">Compras</a></li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

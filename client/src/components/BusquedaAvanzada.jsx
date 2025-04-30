@@ -16,7 +16,8 @@ function BusquedaAvanzada() {
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (storedUser) {
-      setUsuario(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUsuario(parsedUser);
     }
 
     fetch("http://localhost:8080/api/users/vendedores")
@@ -27,13 +28,6 @@ function BusquedaAvanzada() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-
-    console.log("Búsqueda realizada con los siguientes filtros:");
-    console.log("Texto de búsqueda:", nombre);
-    console.log("Fecha inicio:", fechaInicio);
-    console.log("Fecha fin:", fechaFin);
-    console.log("Vendedor:", vendedor);
-    console.log("Plataforma:", plataforma);
 
     try {
       const response = await axios.get('http://localhost:8080/api/products/buscar', {
@@ -87,7 +81,19 @@ function BusquedaAvanzada() {
             <li><a href="#">Inicio</a></li>
             <li><a href="#">Buscar</a></li>
             <li><a href="#">Mensajes</a></li>
-            <li><a href="#">Blog</a></li>
+            {usuario && usuario.rol === 'vendedor' && (
+              <>
+              <li><a href="#">Productos</a></li>
+              <li><a href="#">Ventas</a></li>
+              </>
+            )}
+
+            {usuario && usuario.rol === 'comprador' && (
+              <>
+              <li><a href="#">Carrito</a></li>
+              <li><a href="#">Compras</a></li>
+              </>
+            )}
           </ul>
         </nav>
       </div>
