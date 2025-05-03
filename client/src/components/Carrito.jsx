@@ -32,11 +32,11 @@ function Carrito() {
         <nav className="Car-second-nav">
         <ul>
             <li><a href="#">Inicio</a></li>
-            <li><a href="#">Buscar</a></li>
+            <li><Link to = "/Busqueda">Buscar</Link></li>
             <li><a href="#">Mensajes</a></li>
             {usuario && usuario.rol === 'vendedor' && (
               <>
-              <li><a href="#">Productos</a></li>
+              <li><Link to = "/Publicar">Productos</Link></li>
               <li><a href="#">Ventas</a></li>
               </>
             )}
