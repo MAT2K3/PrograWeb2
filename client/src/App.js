@@ -6,6 +6,10 @@ import Publicar from "./components/Publicar";
 import BusquedaAvanzada from "./components/BusquedaAvanzada";
 import Carrito from "./components/Carrito";
 import Profile from "./components/Profile";
+import HistorialCompras from "./components/HistoryClient"
+import HistorialVentas from "./components/HistorySeller"
+import Messages from "./components/Messages"
+import Product from "./components/Product"
 import React, { useState } from "react";
 
 function App() {
@@ -22,6 +26,10 @@ function App() {
         <Route path="/Busqueda" element={<BusquedaAvanzada />} />
         <Route path="/Carrito" element={<Carrito />} />
         <Route path="/Profile" element={<Profile />} />
+        <Route path="/HistClient" element={<HistorialCompras />} />
+        <Route path="/HistSeller" element={<HistorialVentas />} />
+        <Route path="/Product" element={<Product />} />
+        <Route path="/Messages" element={<Messages />} />
         <Route path="*" element={<Landing />} />
       </Routes>
     </Router>
