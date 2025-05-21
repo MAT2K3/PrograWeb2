@@ -7,6 +7,10 @@ function Carrito() {
   const [usuario, setUsuario] = useState(null);
   const [carrito, setCarrito] = useState([]);
   const [mostrarFormularioPago, setMostrarFormularioPago] = useState(false);
+  const [metodoPago, setMetodoPago] = useState("");
+  const [direccionEnvio, setDireccionEnvio] = useState("");
+  const [telefonoContacto, setTelefonoContacto] = useState("");
+  const [mensaje, setMensaje] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
@@ -35,7 +39,7 @@ function Carrito() {
 
   const eliminarItem = async (itemId) => {
     try {
-      await fetch(`http://localhost:3000/api/carts/${itemId}/eliminar`, {
+      await fetch(`http://localhost:8080/api/carts/${itemId}/eliminar`, {
         method: "PUT",
       });
 
@@ -48,10 +52,43 @@ function Carrito() {
 
   const handleSubmitPedido = (e) => {
     e.preventDefault();
-    // Aquí puedes hacer el POST al backend, limpiar el carrito, etc.
+    realizarCompra();
     console.log("Pedido enviado");
-    setMostrarFormularioPago(false);
+    //setMostrarFormularioPago(false);
   };
+
+  const realizarCompra = async () => {
+  setMensaje(null); // Limpiar mensaje previo
+
+  if (!metodoPago || !direccionEnvio || !telefonoContacto) {
+    return setMensaje({ tipo: "error", texto: "Todos los campos son obligatorios." });
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/api/buys/buy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: usuario.id,
+        metodoPago,
+        direccionEnvio,
+        telefonoContacto
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return setMensaje({ tipo: "error", texto: data.message || "Error al comprar." });
+    }
+
+    setMensaje({ tipo: "exito", texto: "¡Compra realizada con éxito!" });
+    setMostrarFormularioPago(false);
+    fetchCarrito(usuario.id);
+  } catch (error) {
+    setMensaje({ tipo: "error", texto: "Ocurrió un error en el servidor." });
+  }
+};
 
   return (
     <div className="Car-container">
@@ -134,9 +171,9 @@ function Carrito() {
               <div className="Car-pago-formulario">
                 <h3>Finalizar Compra</h3>
                 <form onSubmit={handleSubmitPedido}>
-                  <input type="text" placeholder="Dirección" required />
-                  <input type="tel" placeholder="Teléfono" required />
-                  <select required>
+                  <input type="text" placeholder="Dirección" value={direccionEnvio} onChange={e => setDireccionEnvio(e.target.value)} />
+                  <input type="tel" placeholder="Teléfono" value={telefonoContacto} onChange={e => setTelefonoContacto(e.target.value)} />
+                  <select value={metodoPago} onChange={e => setMetodoPago(e.target.value)}>
                     <option value="">Selecciona método de pago</option>
                     <option value="efectivo">Efectivo</option>
                     <option value="tarjeta">Tarjeta</option>
@@ -145,7 +182,13 @@ function Carrito() {
                   <button type="button" onClick={() => setMostrarFormularioPago(false)}>
                     Cancelar
                   </button>
+                  
                 </form>
+              </div>
+            )}
+            {mensaje && (
+              <div className={`mensaje-${mensaje.tipo}`}>
+                {mensaje.texto}
               </div>
             )}
           </div>
