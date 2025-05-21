@@ -115,6 +115,13 @@ function Product() {
             <p><strong>Precio:</strong> ${parseFloat(producto.precio).toFixed(2)}</p>
             <p><strong>Disponibles:</strong> {parseInt(producto.disponibles)}</p>
             <p><strong>Vendido por:</strong> <a href="#">{producto.publicador.username}</a></p>
+            {usuario && usuario.rol === 'comprador' && usuario._id !== producto.publicador._id && (
+              <form>
+                <button type="submit" className="Prod-add-to-cart-button">
+                  Agregar al carrito
+                </button>
+              </form>
+            )}
           </div>
 
           <div className="Prod-product-comments">
