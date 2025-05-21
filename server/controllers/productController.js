@@ -2,7 +2,7 @@ const Product = require("../model/productos");
 
 const registrarProducto = async (req, res) => {
   try {
-    const { title, description, platform, consoleType, user_id } = req.body;
+    const { title, description, price, platform, consoleType, user_id } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ message: "Se requiere una imagen." });
@@ -13,6 +13,7 @@ const registrarProducto = async (req, res) => {
     const nuevoProducto = new Product({
       nombre: title,
       descripcion: description,
+      precio: price,
       plataforma: platform,
       tipoconsola: consoleType,
       foto: fotoProducto,
@@ -80,4 +81,18 @@ const getProductosFiltrados = async (req, res) => {
   }
 };
 
-module.exports = { registrarProducto, obtenerProductosPorUsuario, getProductosFiltrados };
+const getProductoPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const producto = await Product.findById(id).populate("publicador");
+    if (!producto) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+    res.status(200).json(producto);
+  } catch (error) {
+    console.error("Error al obtener producto por ID:", error);
+    res.status(500).json({ message: "Error del servidor", error: error.message });
+  }
+};
+
+module.exports = { registrarProducto, obtenerProductosPorUsuario, getProductosFiltrados, getProductoPorId };

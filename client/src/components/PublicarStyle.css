@@ -247,6 +247,13 @@ main {
     border: 3px ridge #bbbbbb;
 }
 
+.Pub-post-form input[type="number"] {
+  padding: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 3px ridge #bbbbbb;
+}
+
 .Pub-post-form input[type="file"] {
     margin-left: 20px;
 }
