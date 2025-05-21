@@ -28,7 +28,7 @@ function App() {
         <Route path="/Profile" element={<Profile />} />
         <Route path="/HistClient" element={<HistorialCompras />} />
         <Route path="/HistSeller" element={<HistorialVentas />} />
-        <Route path="/Product" element={<Product />} />
+        <Route path="/Product/:id" element={<Product />} />
         <Route path="/Messages" element={<Messages />} />
         <Route path="*" element={<Landing />} />
       </Routes>

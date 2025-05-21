@@ -1,17 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import './Product.css';
 
 function Product() {
+  const { id } = useParams(); // ✅ Captura el ID de la URL
+  const [producto, setProducto] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+  fetch(`http://localhost:8080/api/products/${id}`)
+    .then(res => {
+      console.log('Status:', res.status);
+      console.log('Content-Type:', res.headers.get('content-type'));
+      
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return res.text().then(text => {
+          console.log('Respuesta no-JSON recibida:', text);
+          throw new Error('La API no devolvió JSON. Verifica la URL y la configuración del servidor.');
+        });
+      }
+      
+      return res.json();
+    })
+    .then(data => {
+      console.log('Datos recibidos:', data);
+      setProducto(data);
+      setLoading(false);
+      console.log("Nombre del vendedor:", data.publicador.username);
+    })
+    .catch(err => {
+      console.error('Error al obtener el producto:', err);
+      alert(`Ocurrió un error:\n${err.message}`);
+      setLoading(false);
+    });
+}, [id]);
+
+  if (loading) return <div>Cargando producto...</div>;
+  if (!producto) return <div>No se pudo cargar el producto.</div>;
+
   return (
     <div className="Prod-container">
       <div className="Prod-main-header">
         <header>
-          <img src="logo.png" alt="Logo" className="Prod-logo-image" />
+          <img className="Prod-logo-image"  src="logo.png" alt="Logo" />
           <nav>
             <ul>
-              <li><a href="index.html">Inicio</a></li>
-              <li><a href="productos.html">Productos</a></li>
-              <li><a href="perfil.html">Mi Perfil</a></li>
+              <li><a href="/">Inicio</a></li>
+              <li><a href="/productos">Productos</a></li>
+              <li><a href="/perfil">Mi Perfil</a></li>
             </ul>
           </nav>
           <div className="Prod-search-bar">
@@ -45,11 +82,11 @@ function Product() {
 
         <section className="Prod-container-inner-right">
           <div className="Prod-product-detail">
-            <h2>Consola Retro Pixel 3000</h2>
-            <p><strong>Descripción:</strong> Consola portátil de 16 bits con más de 300 juegos retro integrados. Pantalla LCD y batería recargable.</p>
-            <img src="producto_ejemplo.jpg" alt="Foto del producto" className="Prod-product-image" />
-            <p><strong>Precio:</strong> $45.00</p>
-            <p><strong>Vendido por:</strong> <a href="#">@RetroMan</a></p>
+            <h2>{producto.nombre}</h2>
+            <p><strong>Descripción:</strong> {producto.descripcion}</p>
+            <img src={producto.foto} alt={producto.nombre} className="Prod-product-image" />
+            <p><strong>Precio:</strong> ${parseFloat(producto.precio).toFixed(2)}</p>
+            <p><strong>Vendido por:</strong> <a href="#">{producto.publicador.username}</a></p>
           </div>
 
           <div className="Prod-product-comments">
@@ -71,22 +108,15 @@ function Product() {
               </form>
             </div>
 
-            <div className="Prod-comment">
-              <img src="user1.jpg" alt="Usuario 1" className="Prod-comment-avatar" />
-              <div className="Prod-comment-text">
-                <strong>@8BitGamer</strong>
-                <p>¡La nostalgia pura! Me recuerda a mi infancia. 5/5 ⭐</p>
+            {(producto.comentarios || []).map((comentario, index) => (
+              <div key={index} className="Prod-comment">
+                <img src={comentario.foto} alt={comentario.usuario} className="Prod-comment-avatar" />
+                <div className="Prod-comment-text">
+                  <strong>{comentario.usuario}</strong>
+                  <p>{comentario.texto}</p>
+                </div>
               </div>
-            </div>
-
-            <div className="Prod-comment">
-              <img src="user2.jpg" alt="Usuario 2" className="Prod-comment-avatar" />
-              <div className="Prod-comment-text">
-                <strong>@GameCollector</strong>
-                <p>Buena calidad y excelente servicio del vendedor.</p>
-              </div>
-            </div>
-
+            ))}
           </div>
         </section>
       </main>
@@ -96,6 +126,6 @@ function Product() {
       </footer>
     </div>
   );
-};
+}
 
 export default Product;

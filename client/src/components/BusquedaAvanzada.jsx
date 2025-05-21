@@ -151,10 +151,12 @@ function BusquedaAvanzada() {
               {productos.length > 0 ? (
                 productos.map((producto) => (
                   <div key={producto._id}>
+                    <Link to={`/Product/${producto._id}`}>
                     <h2>{producto.nombre}</h2>
                     <p>{producto.descripcion}</p>
                     <img src={producto.foto || 'default.jpg'} alt="Imagen de la publicación" />
                     <p>Fecha: <span className="BA-date">{formatFecha(producto.fechapublicado)}</span></p>
+                    </Link>
                   </div>
                 ))
               ) : (
