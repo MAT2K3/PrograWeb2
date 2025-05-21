@@ -2,7 +2,7 @@ const Product = require("../model/productos");
 
 const registrarProducto = async (req, res) => {
   try {
-    const { title, description, price, platform, consoleType, user_id } = req.body;
+    const { title, description, price, available, platform, consoleType, user_id } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ message: "Se requiere una imagen." });
@@ -14,6 +14,7 @@ const registrarProducto = async (req, res) => {
       nombre: title,
       descripcion: description,
       precio: price,
+      disponibles: available,
       plataforma: platform,
       tipoconsola: consoleType,
       foto: fotoProducto,

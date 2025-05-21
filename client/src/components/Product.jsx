@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import axios from "axios";
 import './Product.css';
 
 function Product() {
+  const [usuario, setUsuario] = useState(null);
   const { id } = useParams(); // ✅ Captura el ID de la URL
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
+
+    
+  useEffect(() => {
+      const storedUser = localStorage.getItem("usuario");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUsuario(parsedUser);
+        console.log("Datos del usuario:", parsedUser);
+      }
+    }, []);
 
   useEffect(() => {
   fetch(`http://localhost:8080/api/products/${id}`)
@@ -39,43 +52,57 @@ function Product() {
   if (loading) return <div>Cargando producto...</div>;
   if (!producto) return <div>No se pudo cargar el producto.</div>;
 
+
   return (
     <div className="Prod-container">
       <div className="Prod-main-header">
         <header>
-          <img className="Prod-logo-image"  src="logo.png" alt="Logo" />
-          <nav>
-            <ul>
-              <li><a href="/">Inicio</a></li>
-              <li><a href="/productos">Productos</a></li>
-              <li><a href="/perfil">Mi Perfil</a></li>
-            </ul>
-          </nav>
+          <img className="Prod-logo-image"  src="/logo.png" alt="Logo" />
           <div className="Prod-search-bar">
             <input type="text" placeholder="Buscar..." />
             <button>Buscar</button>
           </div>
+
+          <nav>
+            <ul>
+              <li><a href="#">Ayuda</a></li>
+              <li><a href="#">Cerrar sesión</a></li>
+            </ul>
+          </nav>
         </header>
       </div>
 
       <nav className="Prod-second-nav">
         <ul>
-          <li><a href="#">Categorías</a></li>
-          <li><a href="#">Ofertas</a></li>
-          <li><a href="#">Lo más vendido</a></li>
-          <li><a href="#">Nuevos</a></li>
-        </ul>
+            <li><a href="#">Inicio</a></li>
+            <li><Link to = "/Busqueda">Buscar</Link></li>
+            <li><a href="#">Mensajes</a></li>
+            {usuario && usuario.rol === 'vendedor' && (
+              <>
+              <li><Link to = "/Publicar">Productos</Link></li>
+              <li><a href="#">Ventas</a></li>
+              </>
+            )}
+
+            {usuario && usuario.rol === 'comprador' && (
+              <>
+              <li><a href="#">Carrito</a></li>
+              <li><a href="#">Compras</a></li>
+              </>
+            )}
+          </ul>
       </nav>
 
       <main>
         <aside className="Prod-container-inner">
           <div className="Prod-profile-box">
-            <img src="user.png" alt="Tu foto" className="Prod-profile-image" />
-            <h2>Mi Usuario</h2>
+            <h2>{usuario ? usuario.username : "Cargando..."}</h2>
+            <img className="Prfl-profile-image" src={usuario?.avatar} />
             <ul>
-              <li><a href="#">Mi Cuenta</a></li>
-              <li><a href="#">Mis Compras</a></li>
-              <li><a href="#">Cerrar Sesión</a></li>
+              <li><a href="#">Inicio</a></li>
+              <li><Link to = "/Profile">Mi perfil</Link></li>
+              <li><a href="#">Amigos</a></li>
+              <li><a href="#">Contacto</a></li>
             </ul>
           </div>
         </aside>
@@ -86,6 +113,7 @@ function Product() {
             <p><strong>Descripción:</strong> {producto.descripcion}</p>
             <img src={producto.foto} alt={producto.nombre} className="Prod-product-image" />
             <p><strong>Precio:</strong> ${parseFloat(producto.precio).toFixed(2)}</p>
+            <p><strong>Disponibles:</strong> {parseInt(producto.disponibles)}</p>
             <p><strong>Vendido por:</strong> <a href="#">{producto.publicador.username}</a></p>
           </div>
 

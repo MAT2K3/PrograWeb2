@@ -59,6 +59,7 @@ function Publicar() {
     formData.append('title', event.target.title.value);
     formData.append('description', event.target.description.value);
     formData.append('price', event.target.price.value);
+    formData.append('available', event.target.available.value);
     formData.append('platform', event.target.platform.value);
     formData.append('consoleType', event.target.consoleType.value);
     formData.append('image', file);
@@ -160,15 +161,27 @@ function Publicar() {
                 placeholder="¿Qué estás pensando vender?..."
               />
 
+              <label htmlFor="Pub-price">Precio:</label>
               <input
                 type="number"
                 id="Pub-price"
                 name="price"
-                placeholder="Ingrese el precio del producto"
+                placeholder="100.99"
                 min="0"
                 step="0.01" // Para permitir decimales como 10.99
               />
 
+              <label htmlFor="Pub-available">Disponibles:</label>
+              <input
+                type="number"
+                id="Pub-available"
+                name="available"
+                placeholder="10"
+                min="0"
+                step="1" // Para permitir decimales como 10.99
+              />
+
+              <br></br>
               <label htmlFor="Pub-category1">Plataforma:</label>
               <select id="Pub-category1" name="platform">
                 <option value="general">General</option>

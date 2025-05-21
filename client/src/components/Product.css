@@ -209,12 +209,22 @@ body {
   box-shadow: 5px 5px #5d6d7e;
 }
 
+.Prod-product-detail p strong {
+  font-size: 10px;
+}
+
+.Prod-product-detail p {
+  font-size: 10px;
+  padding: 5px;
+}
+
 .Prod-product-detail h2 {
   background-color: #5d6d7e;
   color: white;
   padding: 5px;
   border: 3px outset #f3f3f3;
   margin-top: 0;
+  font-size: 12px;
 }
 
 .Prod-product-comments {

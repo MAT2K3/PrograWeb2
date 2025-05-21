@@ -221,6 +221,10 @@ main {
     border: 3px outset #F3F3F3;
 }
 
+label {
+    margin-left: 10px;
+}
+
 .Pub-post-form {
     border: 3px outset #F3F3F3;
     padding: 20px;
@@ -248,6 +252,7 @@ main {
 }
 
 .Pub-post-form input[type="number"] {
+    width: 18%;
   padding: 4px;
   margin-bottom: 10px;
   box-sizing: border-box;
