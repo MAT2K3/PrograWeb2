@@ -1,4 +1,5 @@
 const User = require("../model/usuarios");
+const Cart = require("../model/carritos");
 
 const registerUser = async (req, res) => {
   try {
@@ -24,7 +25,16 @@ const registerUser = async (req, res) => {
       extension,
     });
 
-    await newUser.save();
+    const savedUser = await newUser.save();
+
+    if (rol === "comprador") {
+      const newCart = new Cart({
+        usuario: savedUser._id,
+        productos: []
+      });
+
+      await newCart.save();
+    }
     res.status(201).json({ message: "Usuario registrado con éxito" });
   } catch (error) {
     console.error("🚨 Error en el servidor:", error);
