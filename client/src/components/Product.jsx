@@ -9,7 +9,9 @@ function Product() {
   const { id } = useParams(); // ✅ Captura el ID de la URL
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [cantidad, setCantidad] = useState(1); // Estado para la cantidad seleccionada
+  const [addingToCart, setAddingToCart] = useState(false); // Estado para controlar el proceso de agregar al carrito
+  const [mensaje, setMensaje] = useState(null);
     
   useEffect(() => {
       const storedUser = localStorage.getItem("usuario");
@@ -48,6 +50,52 @@ function Product() {
       setLoading(false);
     });
 }, [id]);
+
+const handleCantidadChange = (e) => {
+    setCantidad(parseInt(e.target.value));
+  };
+
+  // Función para agregar al carrito
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    
+    if (!usuario) {
+      setMensaje({ tipo: 'error', texto: 'Debes iniciar sesión para agregar productos al carrito.' });
+      return;
+    }
+    
+    try {
+      setAddingToCart(true);
+      setMensaje(null);
+      
+      // Preparar los datos a enviar
+      const cartData = {
+        userId: usuario.id,
+        productId: producto._id,
+        cantidad: cantidad
+      };
+      
+      // Registrar los datos para depuración
+      console.log('Datos enviados al servidor:', cartData);
+      
+      const response = await axios.post('http://localhost:8080/api/carts/add', cartData);
+      
+      console.log('Respuesta del servidor:', response.data);
+      setMensaje({ tipo: 'exito', texto: 'Producto agregado al carrito correctamente.' });
+      
+      // Opcional: Resetear cantidad a 1 después de agregar
+      setCantidad(1);
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+      console.log('Respuesta de error:', error.response?.data);
+      setMensaje({ 
+        tipo: 'error', 
+        texto: error.response?.data?.message || 'Error al agregar al carrito. Inténtalo de nuevo.' 
+      });
+    } finally {
+      setAddingToCart(false);
+    }
+  };
 
   if (loading) return <div>Cargando producto...</div>;
   if (!producto) return <div>No se pudo cargar el producto.</div>;
@@ -115,10 +163,23 @@ function Product() {
             <p><strong>Precio:</strong> ${parseFloat(producto.precio).toFixed(2)}</p>
             <p><strong>Disponibles:</strong> {parseInt(producto.disponibles)}</p>
             <p><strong>Vendido por:</strong> <a href="#">{producto.publicador.username}</a></p>
+            {mensaje && (
+              <div className={`mensaje-${mensaje.tipo}`}>
+                {mensaje.texto}
+              </div>
+            )}
             {usuario && usuario.rol === 'comprador' && usuario._id !== producto.publicador._id && (
-              <form>
-                <button type="submit" className="Prod-add-to-cart-button">
-                  Agregar al carrito
+              <form onSubmit={handleAddToCart}>
+                <label htmlFor="cantidad">Cantidad:</label>
+                  <select id="cantidad" name="cantidad" value={cantidad} onChange={handleCantidadChange}>
+                    {Array.from({ length: producto.disponibles }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                    ))}
+                  </select>
+                <button type="submit" className="Prod-add-to-cart-button" disabled={addingToCart}>
+                  {addingToCart ? 'Agregando...' : 'Agregar al carrito'}
                 </button>
               </form>
             )}

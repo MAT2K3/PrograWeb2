@@ -239,6 +239,13 @@ body {
   background-color: #77ff51;
 }
 
+.Prod-product-detail select {
+  padding: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 3px ridge #bbbbbb;
+}
+
 .Prod-product-comments {
   border: 3px ridge #bbbbbb;
   padding: 10px;
