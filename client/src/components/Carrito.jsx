@@ -6,6 +6,7 @@ import axios from "axios";
 function Carrito() {
   const [usuario, setUsuario] = useState(null);
   const [carrito, setCarrito] = useState([]);
+  const [mostrarFormularioPago, setMostrarFormularioPago] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
@@ -119,8 +120,28 @@ function Carrito() {
 
             <div className="Car-cart-summary">
               <h3>Total: ${calcularTotal().toFixed(2)}</h3>
-              <button className="Car-checkout">Proceder al pago</button>
+              <button className="Car-checkout" onClick={() => setMostrarFormularioPago(true)}>Proceder al pago</button>
             </div>
+
+            {mostrarFormularioPago && (
+              <div className="Car-pago-formulario">
+                <h3>Finalizar Compra</h3>
+                <form >
+                  <input type="text" placeholder="Nombre completo" required />
+                  <input type="text" placeholder="Dirección" required />
+                  <input type="tel" placeholder="Teléfono" required />
+                  <select required>
+                    <option value="">Selecciona método de pago</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                  </select>
+                  <button type="submit">Confirmar Pedido</button>
+                  <button type="button" onClick={() => setMostrarFormularioPago(false)}>
+                    Cancelar
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </main>

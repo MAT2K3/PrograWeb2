@@ -260,6 +260,43 @@ Car-main {
     background-color: #dddddd;
 }
 
+.Car-pago-formulario input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 3px ridge #bbbbbb;
+}
+
+.Car-pago-formulario input[type="tel"] {
+    width: 35%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 3px ridge #bbbbbb;
+}
+
+.Car-pago-formulario select {
+    margin-left: 15px;
+    padding: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 3px ridge #bbbbbb;
+}
+
+.Car-pago-formulario button {
+    margin-left: 15px;
+    background-color: #607f97;
+    color: white;
+    border: 3px ridge rgb(80, 102, 119);
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.Car-pago-formulario button:hover {
+    background-color: #dddddd;
+}
+
 .Car-footer {
     padding: 0;
     width: 750px;
