@@ -1,16 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import './CarritoStyle.css';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function Carrito() {
   const [usuario, setUsuario] = useState(null);
+  const [carrito, setCarrito] = useState([]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (storedUser) {
-      setUsuario(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUsuario(parsedUser);
+      fetchCarrito(parsedUser.id);
+      console.log("Datos del usuario:", parsedUser);
     }
   }, []);
+
+  const fetchCarrito = async (userId) => {
+    try {
+      const res = await axios.get(`/api/carts/${userId}`);
+      setCarrito(res.data.carrito.productos || []);
+    } catch (error) {
+      console.error("Error al cargar el carrito:", error);
+    }
+  };
+
+  const calcularTotal = () => {
+    return carrito.reduce((total, item) => {
+      return total + (item.producto?.precio || 0) * item.cantidad;
+    }, 0);
+  };
+
+  const eliminarItem = async (itemId) => {
+  try {
+    await fetch(`http://localhost:3000/api/carts/${itemId}/eliminar`, {
+      method: "PUT",
+    });
+
+    // Vuelve a cargar el carrito después de eliminar
+    fetchCarrito(usuario.id); // tu función que vuelve a traer el carrito del backend
+  } catch (error) {
+    console.error("Error al eliminar el item:", error);
+  }
+};
 
   return (
     <div className="Car-container">
@@ -68,28 +101,24 @@ function Carrito() {
         <div className="Car-container-inner-right">
           <h2>Tu Carrito</h2>
           <div className="Car-cart-items">
-            <div className="Car-cart-item">
-              <img className="Car-cart-item-image" src="producto1.jpeg" alt="Producto 1" />
-              <div className="Car-cart-item-info">
-                <h3>Consola PSP Vita</h3>
-                <p>Cantidad: 1</p>
-                <p>Precio: $150.00</p>
-                <button className="Car-remove-item">Eliminar</button>
+            {carrito.map((item, index) => (
+              <div key={index} className="Car-cart-item">
+                <img
+                  className="Car-cart-item-image"
+                  src={item.producto?.foto || "placeholder.png"}
+                  alt={item.producto?.nombre}
+                />
+                <div className="Car-cart-item-info">
+                  <h3>{item.producto?.nombre}</h3>
+                  <p>Cantidad: {item.cantidad}</p>
+                  <p>Precio: ${item.producto?.precio}</p>
+                  <button className="Car-remove-item" onClick={() => eliminarItem(item._id)}>Eliminar</button>
+                </div>
               </div>
-            </div>
-
-            <div className="Car-cart-item">
-              <img className="Car-cart-item-image" src="producto2.jpeg" alt="Producto 2" />
-              <div className="Car-cart-item-info">
-                <h3>Nintendo Switch lite azul</h3>
-                <p>Cantidad: 2</p>
-                <p>Precio: $60.00</p>
-                <button className="Car-remove-item">Eliminar</button>
-              </div>
-            </div>
+            ))}
 
             <div className="Car-cart-summary">
-              <h3>Total: $270.00</h3>
+              <h3>Total: ${calcularTotal().toFixed(2)}</h3>
               <button className="Car-checkout">Proceder al pago</button>
             </div>
           </div>

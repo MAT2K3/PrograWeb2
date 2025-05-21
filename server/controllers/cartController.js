@@ -38,7 +38,7 @@ const addToCart = async (req, res) => {
     if (carrito.productos && carrito.productos.length > 0) {
       for (const itemId of carrito.productos) {
         const item = await CartItem.findById(itemId);
-        if (item && item.producto.toString() === productId) {
+        if (item && item.producto.toString() === productId && item.activo) {
           itemExistente = item;
           break;
         }
@@ -75,4 +75,50 @@ const addToCart = async (req, res) => {
     return res.status(500).json({ message: "Error del servidor", error: error.message });
   }
 };
-module.exports = { addToCart };
+
+const getCartByUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const carrito = await Cart.findOne({ usuario: userId }).populate({
+      path: "productos",
+      match: { activo: true },
+      populate: {
+        path: "producto", // esto hace populate del producto dentro del CartItem
+        model: "Product"
+      }
+    });
+
+    if (!carrito) {
+      return res.status(404).json({ message: "Carrito no encontrado." });
+    }
+
+    res.status(200).json({ carrito });
+  } catch (error) {
+    console.error("Error al obtener el carrito:", error);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+};
+
+const desactivarCartItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const item = await CartItem.findByIdAndUpdate(
+      id,
+      { activo: false },
+      { new: true }
+    );
+
+    if (!item) {
+      return res.status(404).json({ message: "Item no encontrado." });
+    }
+
+    res.status(200).json({ message: "Item eliminado del carrito." });
+  } catch (error) {
+    console.error("Error al eliminar item del carrito:", error);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+};
+
+module.exports = { addToCart, getCartByUser, desactivarCartItem };

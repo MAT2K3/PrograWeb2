@@ -134,7 +134,7 @@ const handleCantidadChange = (e) => {
 
             {usuario && usuario.rol === 'comprador' && (
               <>
-              <li><a href="#">Carrito</a></li>
+              <li><Link to = "/Carrito">Carrito</Link></li>
               <li><a href="#">Compras</a></li>
               </>
             )}
