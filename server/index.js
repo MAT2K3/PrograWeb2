@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const buyRoutes = require("./routes/buyRoutes");
 const connectDB = require("./database");
 const cors = require("cors");
 const multer = require("multer");
@@ -39,6 +40,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/carts", cartRoutes);
+app.use("/api/buys", buyRoutes);
 
 app.use(express.static(path.join(__dirname, "../client/public")));
 app.use("/uploads", express.static("uploads"));

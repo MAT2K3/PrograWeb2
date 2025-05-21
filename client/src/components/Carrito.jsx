@@ -34,17 +34,24 @@ function Carrito() {
   };
 
   const eliminarItem = async (itemId) => {
-  try {
-    await fetch(`http://localhost:3000/api/carts/${itemId}/eliminar`, {
-      method: "PUT",
-    });
+    try {
+      await fetch(`http://localhost:3000/api/carts/${itemId}/eliminar`, {
+        method: "PUT",
+      });
 
-    // Vuelve a cargar el carrito después de eliminar
-    fetchCarrito(usuario.id); // tu función que vuelve a traer el carrito del backend
-  } catch (error) {
-    console.error("Error al eliminar el item:", error);
-  }
-};
+      // Vuelve a cargar el carrito después de eliminar
+      fetchCarrito(usuario.id); // tu función que vuelve a traer el carrito del backend
+    } catch (error) {
+      console.error("Error al eliminar el item:", error);
+    }
+  };
+
+  const handleSubmitPedido = (e) => {
+    e.preventDefault();
+    // Aquí puedes hacer el POST al backend, limpiar el carrito, etc.
+    console.log("Pedido enviado");
+    setMostrarFormularioPago(false);
+  };
 
   return (
     <div className="Car-container">
@@ -126,8 +133,7 @@ function Carrito() {
             {mostrarFormularioPago && (
               <div className="Car-pago-formulario">
                 <h3>Finalizar Compra</h3>
-                <form >
-                  <input type="text" placeholder="Nombre completo" required />
+                <form onSubmit={handleSubmitPedido}>
                   <input type="text" placeholder="Dirección" required />
                   <input type="tel" placeholder="Teléfono" required />
                   <select required>
