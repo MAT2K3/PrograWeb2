@@ -25,7 +25,7 @@ function HistorialCompras() {
           </nav>
         </header>
         <nav className="HistC-second-nav">
-        <ul>
+          <ul>
           <li><Link to = "/Busqueda">Buscar</Link></li>
           <li><Link to ="/Messages">Mensajes</Link></li>
           {usuario && usuario.rol === 'vendedor' && (
