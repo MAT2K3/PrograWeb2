@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema({
   foto: { type: String, required: true, unique: true },
   publicador: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   fechapublicado: { type: Date, default: Date.now  },
+  calificacionPromedio: { type: Number, default: 0 },
   estatus: { type: Boolean, default: true }
 });
 
