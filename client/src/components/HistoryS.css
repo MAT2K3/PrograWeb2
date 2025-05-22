@@ -39,6 +39,16 @@ body {
   margin-top: 15px;
 }
 
+.HistS-main-header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.HistS-main-header a:hover {
+  text-decoration: underline;
+}
+
+
 .HistS-header {
   display: flex;
   justify-content: space-between;
@@ -75,6 +85,7 @@ body {
 
 .HistS-logo-image {
   height: 40px;
+  width: auto;
 }
 
 .HistS-search-bar input[type="text"] {
@@ -96,7 +107,7 @@ body {
 
 .HistS-second-nav {
   background-color: #f2f0f0;
-  width: 750px;
+  width: 737px;
   margin: 0 auto;
 }
 
@@ -140,6 +151,15 @@ body {
   padding: 10px;
   width: 25%;
   background-color: #e3e3e3;
+}
+
+.HistS-profile-box {
+    background-color: lightgray;
+    margin-top: 10px;
+    text-align: center;
+    border: 7px ridge #bbbbbb;
+    padding: 1rem;
+    box-shadow: calc((400px + (25px * 2)) * 0.025) calc((400px + (25px * 2)) * 0.025) #5d6d7e;
 }
 
 .HistS-container-inner h2 {

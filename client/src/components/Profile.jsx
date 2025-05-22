@@ -112,36 +112,28 @@ function Profile() {
       <div className="Prfl-main-header">
         <header>
           <img className="Prfl-logo-image" src="logo.png" alt="Logo" />
-          <div className="Prfl-search-bar">
-            <input type="text" placeholder="buscar..." />
-            <button type="submit">Search</button>
-          </div>
           <nav>
-            <ul>
-              <li><a href="#">Ayuda</a></li>
-              <li><a href="#">Cerrar sesión</a></li>
-            </ul>
+            <a href="#">Cerrar sesión</a>
           </nav>
         </header>
         <nav className="Pub-second-nav">
           <ul>
-            <li><a href="#">Inicio</a></li>
             <li><Link to = "/Busqueda">Buscar</Link></li>
-            <li><a href="#">Mensajes</a></li>
+            <li><Link to ="/Messages">Mensajes</Link></li>
             {usuario && usuario.rol === 'vendedor' && (
-              <>
-                <li><Link to = "/Publicar">Productos</Link></li>
-                <li><a href="#">Ventas</a></li>
+            <>
+              <li><Link to = "/Publicar">Productos</Link></li>
+              <li><Link to= "/HistSeller">Ventas</Link></li>
                 </>
               )}
-        
-            {usuario && usuario.rol === 'comprador' && (
-              <>
-                <li><a href="#">Carrito</a></li>
-                <li><a href="#">Compras</a></li>
-              </>
+          
+              {usuario && usuario.rol === 'comprador' && (
+                <>
+                <li><Link to = "/Carrito">Carrito</Link></li>
+                <li><Link to ="/HistClient">Compras</Link></li>
+                </>
               )}
-          </ul>
+            </ul>
         </nav>
       </div>
 
@@ -151,10 +143,7 @@ function Profile() {
             <h2>{usuario ? usuario.username : "Cargando..."}</h2>
             <img className="Prfl-profile-image" src={usuario?.avatar} />
             <ul>
-              <li><a href="#">Inicio</a></li>
               <li><Link to="/Profile">Mi perfil</Link></li>
-              <li><a href="#">Amigos</a></li>
-              <li><a href="#">Contacto</a></li>
             </ul>
           </div>
         </div>

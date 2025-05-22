@@ -39,6 +39,15 @@ body {
   margin-top: 15px;
 }
 
+.HistC-main-header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.HistC-main-header a:hover {
+  text-decoration: underline;
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -74,6 +83,7 @@ header nav li:first-child {
 
 .HistC-logo-image {
   height: 40px;
+  width: auto;
 }
 
 .HistC-search-bar input[type="text"] {
@@ -95,7 +105,7 @@ header nav li:first-child {
 
 .HistC-second-nav {
   background-color: #f2f0f0;
-  width: 750px;
+  width: 737px;
   margin: 0 auto;
 }
 
@@ -135,9 +145,18 @@ main {
 }
 
 .HistC-container-inner {
-  padding: 10px;
-  width: 25%;
-  background-color: #e3e3e3;
+    padding: 10px;
+    width: 25%;
+    background-color: #e3e3e3;
+}
+
+.HistC-profile-box {
+    background-color: lightgray;
+    margin-top: 10px;
+    text-align: center;
+    border: 7px ridge #bbbbbb;
+    padding: 1rem;
+    box-shadow: calc((400px + (25px * 2)) * 0.025) calc((400px + (25px * 2)) * 0.025) #5d6d7e;
 }
 
 .HistC-container-inner h2 {

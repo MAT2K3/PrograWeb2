@@ -94,35 +94,26 @@ function Publicar() {
       <div className="Pub-main-header">
         <header>
           <img className="Pub-logo-image" src="/logo.png" alt="Logo" />
-          <div className="Pub-search-bar">
-            <input type="text" placeholder="buscar..." />
-            <button type="submit">buscar</button>
-          </div>
-
           <nav>
-            <ul>
-              <li><a href="#">Ayuda</a></li>
-              <li><a href="#">Cerrar sesión</a></li>
-            </ul>
+            <a href="#">Cerrar sesión</a>
           </nav>
         </header>
 
         <nav className="Pub-second-nav">
           <ul>
-            <li><a href="#">Inicio</a></li>
             <li><Link to = "/Busqueda">Buscar</Link></li>
-            <li><a href="#">Mensajes</a></li>
+            <li><Link to ="/Messages">Mensajes</Link></li>
             {usuario && usuario.rol === 'vendedor' && (
               <>
               <li><Link to = "/Publicar">Productos</Link></li>
-              <li><a href="#">Ventas</a></li>
+              <li><Link to= "/HistSeller">Ventas</Link></li>
               </>
             )}
 
             {usuario && usuario.rol === 'comprador' && (
               <>
-              <li><a href="#">Carrito</a></li>
-              <li><a href="#">Compras</a></li>
+              <li><Link to = "/Carrito">Carrito</Link></li>
+              <li><Link to ="/HistClient">Compras</Link></li>
               </>
             )}
           </ul>
@@ -135,10 +126,7 @@ function Publicar() {
             <h2>{usuario ? usuario.username : "Cargando..."}</h2>
             <img className="Prfl-profile-image" src={usuario?.avatar} />
             <ul>
-              <li><a href="#">Inicio</a></li>
               <li><Link to = "/Profile">Mi perfil</Link></li>
-              <li><a href="#">Amigos</a></li>
-              <li><a href="#">Contacto</a></li>
             </ul>
           </div>
         </div>
@@ -212,12 +200,14 @@ function Publicar() {
                 <p>No tienes publicaciones aún.</p>
               ) : (
                 productos.map((producto) => (
-                  <div key={producto._id}>
+                  <div key={producto._id} className='Pub-Link'>
+                    <Link to={`/Product/${producto._id}`} className='TheLink'>
                     <h2>{producto.nombre}</h2>
                     <p>{producto.descripcion}</p>
                     {/* Mostramos la imagen del producto si existe */}
                     {producto.foto && <img src={producto.foto} alt="Imagen de la publicación" />}
                     <p>Fecha: <span className="Pub-date">{formatFecha(producto.fechapublicado)}</span></p>
+                    </Link>
                   </div>
                 ))
               )}

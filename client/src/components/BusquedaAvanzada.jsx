@@ -75,14 +75,14 @@ function BusquedaAvanzada() {
             {usuario && usuario.rol === 'vendedor' && (
               <>
               <li><Link to = "/Publicar">Productos</Link></li>
-              <li><a href="#">Ventas</a></li>
+              <li><Link to= "/HistSeller">Ventas</Link></li>
               </>
             )}
 
             {usuario && usuario.rol === 'comprador' && (
               <>
-              <li><a href="#">Carrito</a></li>
-              <li><a href="#">Compras</a></li>
+              <li><Link to = "/Carrito">Carrito</Link></li>
+              <li><Link to ="/HistClient">Compras</Link></li>
               </>
             )}
           </ul>

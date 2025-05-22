@@ -1,40 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './HistoryC.css';
+import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function HistorialCompras() {
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
+      const storedUser = localStorage.getItem("usuario");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUsuario(parsedUser);
+        console.log("Datos del usuario:", parsedUser);
+      }
+    }, []);
+
   return (
     <div className="HistC-container">
       <div className="HistC-main-header">
         <header>
           <img src="logo.png" alt="Logo" className="HistC-logo-image" />
           <nav>
-            <ul>
-              <li><a href="perfil.html">Perfil</a></li>
-              <li><a href="mensajes.html">Mensajes</a></li>
-              <li><a href="historial.html">Historial</a></li>
-            </ul>
+            <a href="#">Cerrar sesión</a>
           </nav>
         </header>
-      </div>
-
-      <nav className="HistC-second-nav">
+        <nav className="HistC-second-nav">
         <ul>
-          <li><a href="#">Inicio</a></li>
-          <li><a href="#">Buscar productos</a></li>
-          <li><a href="#">Carrito</a></li>
-          <li><a href="#">Soporte</a></li>
+          <li><Link to = "/Busqueda">Buscar</Link></li>
+          <li><Link to ="/Messages">Mensajes</Link></li>
+          {usuario && usuario.rol === 'vendedor' && (
+            <>
+            <li><Link to = "/Publicar">Productos</Link></li>
+            <li><Link to= "/HistSeller">Ventas</Link></li>
+            </>
+          )}
+
+          {usuario && usuario.rol === 'comprador' && (
+            <>
+            <li><Link to = "/Carrito">Carrito</Link></li>
+            <li><Link to ="/HistClient">Compras</Link></li>
+            </>
+          )}
         </ul>
       </nav>
+      </div>
 
       <main>
-        <aside className="HistC-container-inner">
-          <h2>Opciones</h2>
-          <ul>
-            <li><a href="#">Mi cuenta</a></li>
-            <li><a href="#">Ajustes</a></li>
-            <li><a href="#">Cerrar sesión</a></li>
-          </ul>
-        </aside>
+        <div className="HistC-container-inner">
+          <div className="HistC-profile-box">
+            <h2>{usuario ? usuario.username : "Cargando..."}</h2>
+            <img className="Prfl-profile-image" src={usuario?.avatar} />
+            <ul>
+              <li><Link to="/Profile">Mi perfil</Link></li>
+            </ul>
+          </div>
+        </div>
 
         <section className="HistC-container-inner-right">
           <div className="HistC-purchase-history">

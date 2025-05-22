@@ -1,43 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './HistoryS.css';
+import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function HistorialVentas() {
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
+      const storedUser = localStorage.getItem("usuario");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUsuario(parsedUser);
+        console.log("Datos del usuario:", parsedUser);
+      }
+    }, []);
+
   return (
     <div className="HistS-container">
       <div className="HistS-main-header">
         <header>
-          <img src="tu-logo.png" alt="Logo" className="HistS-logo-image" />
+          <img src="/logo.png" alt="Logo" className="HistS-logo-image" />
           <nav>
-            <ul>
-              <li><a href="#">Inicio</a></li>
-              <li><a href="#">Mi Perfil</a></li>
-              <li><a href="#">Ventas</a></li>
-              <li><a href="#">Cerrar Sesión</a></li>
-            </ul>
+            <a href="#">Cerrar Sesión</a>
           </nav>
-          <div className="HistS-search-bar">
-            <input type="text" placeholder="Buscar..." />
-            <button>Buscar</button>
-          </div>
         </header>
-      </div>
 
-      <div className="HistS-second-nav">
-        <ul>
-          <li><a href="#">Resumen</a></li>
-          <li><a href="#">Productos</a></li>
-          <li><a href="#">Historial de Ventas</a></li>
-        </ul>
+        <div className="HistS-second-nav">
+          <ul>
+            <li><Link to = "/Busqueda">Buscar</Link></li>
+            <li><Link to ="/Messages">Mensajes</Link></li>
+            {usuario && usuario.rol === 'vendedor' && (
+              <>
+              <li><Link to = "/Publicar">Productos</Link></li>
+              <li><Link to= "/HistSeller">Ventas</Link></li>
+              </>
+            )}
+            
+            {usuario && usuario.rol === 'comprador' && (
+              <>
+              <li><Link to = "/Carrito">Carrito</Link></li>
+              <li><Link to ="/HistClient">Compras</Link></li>
+              </>
+            )}
+          </ul>
+        </div>
       </div>
-
+      
       <main>
         <div className="HistS-container-inner">
-          <h2>Menú Vendedor</h2>
-          <ul>
-            <li><a href="#">Añadir Producto</a></li>
-            <li><a href="#">Modificar Inventario</a></li>
-            <li><a href="#">Ventas</a></li>
-          </ul>
+          <div className="HistS-profile-box">
+            <h2>{usuario ? usuario.username : "Cargando..."}</h2>
+            <img className="Prfl-profile-image" src={usuario?.avatar} />
+            <ul>
+              <li><Link to="/Profile">Mi perfil</Link></li>
+            </ul>
+          </div>
         </div>
 
         <div className="HistS-container-inner-right">

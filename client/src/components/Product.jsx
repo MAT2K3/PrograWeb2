@@ -106,40 +106,30 @@ const handleCantidadChange = (e) => {
       <div className="Prod-main-header">
         <header>
           <img className="Prod-logo-image"  src="/logo.png" alt="Logo" />
-          <div className="Prod-search-bar">
-            <input type="text" placeholder="Buscar..." />
-            <button>Buscar</button>
-          </div>
-
           <nav>
-            <ul>
-              <li><a href="#">Ayuda</a></li>
-              <li><a href="#">Cerrar sesión</a></li>
-            </ul>
+            <a href="#">Cerrar sesión</a>
           </nav>
         </header>
-      </div>
-
-      <nav className="Prod-second-nav">
-        <ul>
-            <li><a href="#">Inicio</a></li>
+        <nav className="Prod-second-nav">
+          <ul>
             <li><Link to = "/Busqueda">Buscar</Link></li>
-            <li><a href="#">Mensajes</a></li>
+            <li><Link to ="/Messages">Mensajes</Link></li>
             {usuario && usuario.rol === 'vendedor' && (
               <>
               <li><Link to = "/Publicar">Productos</Link></li>
-              <li><a href="#">Ventas</a></li>
+              <li><Link to= "/HistSeller">Ventas</Link></li>
               </>
             )}
 
             {usuario && usuario.rol === 'comprador' && (
               <>
               <li><Link to = "/Carrito">Carrito</Link></li>
-              <li><a href="#">Compras</a></li>
+              <li><Link to ="/HistClient">Compras</Link></li>
               </>
             )}
           </ul>
-      </nav>
+        </nav>
+      </div>
 
       <main>
         <aside className="Prod-container-inner">
@@ -147,10 +137,7 @@ const handleCantidadChange = (e) => {
             <h2>{usuario ? usuario.username : "Cargando..."}</h2>
             <img className="Prfl-profile-image" src={usuario?.avatar} />
             <ul>
-              <li><a href="#">Inicio</a></li>
               <li><Link to = "/Profile">Mi perfil</Link></li>
-              <li><a href="#">Amigos</a></li>
-              <li><a href="#">Contacto</a></li>
             </ul>
           </div>
         </aside>

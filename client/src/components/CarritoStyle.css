@@ -39,6 +39,16 @@ body {
     margin-top: 15px;
 }
 
+
+.Car-main-header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.Car-main-header a:hover {
+    text-decoration: underline;
+}
+
 Car-header {
     display: flex;
     justify-content: space-between;
@@ -74,6 +84,7 @@ Car-header {
 
 .Car-logo-image {
     height: 40px;
+    width: auto;
 }
 
 .Car-search-bar input[type="text"] {
@@ -95,7 +106,7 @@ Car-header {
 
 .Car-second-nav {
     background-color: #f2f0f0;
-    width: 750px;
+    width: 737px;
     margin: 0 auto;
 }
 
@@ -178,6 +189,10 @@ Car-main {
 .Car-container-inner li a {
     text-decoration: none;
     color: #333;
+}
+
+.Car-container-inner li a:hover {
+    text-decoration: underline;
 }
 
 .Car-container-inner-right {

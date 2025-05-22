@@ -39,6 +39,15 @@ body {
     margin-top: 15px;
 }
 
+.Prfl-main-header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.Prfl-main-header a:hover {
+    text-decoration: underline;
+}
+
 .Prfl-header {
     display: flex;
     justify-content: space-between;
@@ -74,6 +83,7 @@ body {
 
 .Prfl-logo-image {
     height: 40px;
+    width: auto;
 }
 
 .Prfl-search-bar input[type="text"] {

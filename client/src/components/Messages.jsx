@@ -1,31 +1,47 @@
-// Mensajes.jsx
-import React from 'react';
-import './Messages.css'; // Asegúrate que los estilos tengan las clases con el prefijo Msg-
+import React, { useEffect, useState } from 'react';
+import './Messages.css';
+import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function Messages() {
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
+        const storedUser = localStorage.getItem("usuario");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUsuario(parsedUser);
+          console.log("Datos del usuario:", parsedUser);
+        }
+      }, []);
+
   return (
     <div className="Msg-container">
       <div className="Msg-main-header">
         <header>
           <img className="Msg-logo-image" src="logo.png" alt="Logo" />
-          <div className="Msg-search-bar">
-            <input type="text" placeholder="buscar..." />
-            <button type="submit">Search</button>
-          </div>
           <nav>
-            <ul>
-              <li><a href="#">Ayuda</a></li>
-              <li><a href="#">Cerrar sesión</a></li>
-            </ul>
+            <a href="#">Cerrar sesión</a>
           </nav>
         </header>
 
         <nav className="Msg-second-nav">
           <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#">Buscar</a></li>
-            <li><a href="#">Mensajes</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><Link to = "/Busqueda">Buscar</Link></li>
+            <li><Link to ="/Messages">Mensajes</Link></li>
+            {usuario && usuario.rol === 'vendedor' && (
+              <>
+              <li><Link to = "/Publicar">Productos</Link></li>
+              <li><Link to= "/HistSeller">Ventas</Link></li>
+              </>
+            )}
+            
+            {usuario && usuario.rol === 'comprador' && (
+              <>
+              <li><Link to = "/Carrito">Carrito</Link></li>
+              <li><Link to ="/HistClient">Compras</Link></li>
+              </>
+            )}
           </ul>
         </nav>
       </div>
@@ -33,13 +49,10 @@ function Messages() {
       <main>
         <div className="Msg-container-inner">
           <div className="Msg-profile-box">
-            <h2>EliWoods (•̀. •́ )و</h2>
-            <img className="Msg-profile-image" src="maka.jpg" alt="Perfil" />
+            <h2>{usuario ? usuario.username : "Cargando..."}</h2>
+            <img className="Msg-profile-image" src={usuario?.avatar} />
             <ul>
-              <li><a href="#">Inicio</a></li>
-              <li><a href="#">Mi perfil</a></li>
-              <li><a href="#">Amigos</a></li>
-              <li><a href="#">Contacto</a></li>
+              <li><Link to="/Profile">Mi perfil</Link></li>
             </ul>
           </div>
         </div>

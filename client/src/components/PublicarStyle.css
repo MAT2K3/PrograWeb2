@@ -36,6 +36,15 @@ body {
     margin-top: 15px;
 }
 
+.Pub-main-header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.Pub-main-header a:hover {
+    text-decoration: underline;
+}
+
 header {
     display: flex;
     justify-content: space-between;
@@ -71,6 +80,7 @@ header nav li:first-child {
 
 .Pub-logo-image {
     height: 40px;
+    width: auto;
 }
 
 .Pub-search-bar input[type="text"] {
@@ -92,7 +102,7 @@ header nav li:first-child {
 
 .Pub-second-nav {
     background-color: #f2f0f0;
-    width: 750px;
+    width: 737px;
     margin: 0 auto;
 }
 
@@ -193,6 +203,18 @@ main {
     padding: 5px;
 }
 
+.Pub-Link {
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.Pub-Link:hover {
+    background-color: #f0f0f0;
+}
+
 .Pub-container-inner ul {
     list-style: none;
     padding: 0;
@@ -286,6 +308,7 @@ label {
     color: #9dc3e3;
     font-size: 1.2rem;
     margin-top: 0;
+    margin-bottom: 5px;
 }
 
 .Pub-posts p {
@@ -293,7 +316,8 @@ label {
 }
 
 .Pub-posts img {
-    width: 100px;
+    width: 150px;
+    height: auto;
 }
 
 .Pub-posts .Pub-date {
@@ -304,6 +328,11 @@ label {
     border: 3px outset #F3F3F3;
     padding: 10px;
     margin-bottom: 10px;
+}
+
+.TheLink {
+    text-decoration: none;
+    color: inherit;
 }
 
 footer {
