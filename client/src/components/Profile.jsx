@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ProfileStyle.css';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const [usuario, setUsuario] = useState(null);
@@ -14,9 +15,18 @@ function Profile() {
     contra: "",
     fechanacimiento: "",
   });
+  const navigate = useNavigate()
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion"); // Cambia por tu ruta de login
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
+    if (!storedUser) {
+      navigate("/"); // Cambia por tu landing page
+    }
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
 
@@ -113,7 +123,7 @@ function Profile() {
         <header>
           <img className="Prfl-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a href="#">Cerrar sesión</a>
+            <a href="#" onClick={cerrarSesion}>Cerrar sesión</a>
           </nav>
         </header>
         <nav className="Pub-second-nav">
@@ -131,6 +141,12 @@ function Profile() {
                 <>
                 <li><Link to = "/Carrito">Carrito</Link></li>
                 <li><Link to ="/HistClient">Compras</Link></li>
+                </>
+              )}
+
+              {usuario && usuario.rol === 'admin' && (
+                <>
+                <li><Link to ="/Admin">Gestionar Compras</Link></li>
                 </>
               )}
             </ul>
