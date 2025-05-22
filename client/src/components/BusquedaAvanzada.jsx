@@ -85,6 +85,12 @@ function BusquedaAvanzada() {
               <li><Link to ="/HistClient">Compras</Link></li>
               </>
             )}
+
+            {usuario && usuario.rol === 'admin' && (
+              <>
+              <li><Link to ="/Admin">Gestionar Compras</Link></li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

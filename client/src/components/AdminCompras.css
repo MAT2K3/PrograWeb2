@@ -1,0 +1,347 @@
+/* Estilos retro para AdminPurchases.css - Basado en HistoryS.css */
+
+/* Cursor retro */
+* {
+  cursor: url(https://cur.cursors-4u.net/cursors/cur-9/cur830.cur), auto !important;
+}
+
+/* Fuente pixelada */
+@font-face {
+  font-family: 'Arial Pixel';
+  src: url('PIXEARG_.TTF') format('truetype');
+}
+
+* {
+  letter-spacing: 1.5px;
+  font-size: xx-small;
+  font-family: 'Arial Pixel';
+}
+
+body {
+  line-height: 1.5;
+  color: #333;
+  margin: 0;
+  display: flex;
+  background-color: #c5c5c5;
+}
+
+.AdminP-container {
+  margin: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border: 3px outset #F3F3F3;
+  background-color: #e3e3e3;
+}
+
+.AdminP-main-header {
+  margin: auto;
+  width: 750px;
+  border: 7px inset #F3F3F3 !important;
+  margin-top: 15px;
+}
+
+.AdminP-main-header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.AdminP-main-header a:hover {
+  text-decoration: underline;
+}
+
+.AdminP-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e3e3e3;
+  padding: 5px;
+}
+
+.AdminP-logo-image {
+  height: 40px;
+  width: auto;
+}
+
+.AdminP-second-nav {
+  background-color: #f2f0f0;
+  width: 737px;
+  margin: 0 auto;
+}
+
+.AdminP-second-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 5px;
+  padding-left: 20px;
+}
+
+.AdminP-second-nav ul li {
+  display: inline;
+  margin-right: 20px;
+  padding-right: 20px;
+  border-right: 1px solid #000;
+}
+
+.AdminP-second-nav ul li:last-child {
+  border-right: none;
+}
+
+.AdminP-second-nav ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.AdminP-second-nav ul li a:hover {
+  text-decoration: underline;
+}
+
+.AdminP-main {
+  width: 800px;
+  margin: auto;
+  flex: 1;
+  display: flex;
+  background-color: #e3e3e3;
+  justify-content: space-between;
+}
+
+.AdminP-container-inner {
+  padding: 10px;
+  width: 25%;
+  background-color: #e3e3e3;
+}
+
+.AdminP-profile-box {
+  background-color: lightgray;
+  margin-top: 10px;
+  text-align: center;
+  border: 7px ridge #bbbbbb;
+  padding: 1rem;
+  box-shadow: 10px 10px #5d6d7e;
+}
+
+.AdminP-container-inner h2 {
+  margin: 0;
+  padding: 0;
+}
+
+.AdminP-profile-image {
+  margin-top: 5px;
+  width: 150px;
+  height: 150px;
+  border: 3px outset #F3F3F3 !important;
+}
+
+.AdminP-container-inner ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.AdminP-container-inner ul li {
+  margin-top: 5px;
+}
+
+.AdminP-container-inner li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.AdminP-container-inner li a:hover {
+  text-decoration: underline;
+}
+
+.AdminP-container-inner-right {
+  margin: 10px 20px;
+  width: 75%;
+  padding: 10px;
+  background: white radial-gradient(circle at 0 0, #b3d3e850 2px, transparent 0);
+  background-size: 4px 4px;
+  border: 3px outset #F3F3F3;
+}
+
+.AdminP-purchases-history {
+  background-color: #f5f5f5;
+  border: 3px ridge #bbbbbb;
+  padding: 10px;
+  box-shadow: 5px 5px #5d6d7e;
+}
+
+.AdminP-purchases-history h2 {
+  background-color: #5d6d7e;
+  color: white;
+  text-align: center;
+  padding: 5px;
+  font-size: 1rem;
+  border: 3px outset #f3f3f3;
+  margin-top: 0;
+}
+
+.AdminP-purchase-item {
+  background-color: #fff;
+  border: 2px solid #ccc;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: xx-small;
+  box-shadow: 2px 2px #ccc;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.AdminP-purchase-item p {
+  margin: 5px 0;
+}
+
+.AdminP-product-image {
+  width: 150px;
+  height: auto;
+  object-fit: cover;
+  border: 2px inset #f3f3f3;
+}
+
+.AdminP-purchase-details {
+  flex: 1;
+}
+
+/* Estilos para los estados */
+.AdminP-status {
+  padding: 2px 8px;
+  border: 2px inset #f3f3f3;
+  font-size: xx-small;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.AdminP-status-pendiente {
+  background-color: #ffff99;
+  color: #666600;
+}
+
+.AdminP-status-en-camino {
+  background-color: #99ccff;
+  color: #003366;
+}
+
+.AdminP-status-entregado {
+  background-color: #99ff99;
+  color: #006600;
+}
+
+.AdminP-status-cancelado {
+  background-color: #ff9999;
+  color: #660000;
+}
+
+/* Estilos para los botones de acción */
+.AdminP-action-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.AdminP-btn {
+  padding: 5px 10px;
+  color: black;
+  background: #ffffff80;
+  border: 3px ridge white;
+  font-size: xx-small;
+  font-family: 'Arial Pixel';
+  letter-spacing: 1.5px;
+  cursor: url(https://cur.cursors-4u.net/cursors/cur-9/cur830.cur), auto !important;
+}
+
+.AdminP-btn:hover:not(:disabled) {
+  background-color: #37404b;
+  color: white;
+}
+
+.AdminP-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  background-color: #cccccc;
+  border: 3px inset #cccccc;
+}
+
+.AdminP-btn:active:not(:disabled) {
+  border: 3px inset white;
+}
+
+.AdminP-btn-en-camino {
+  background: linear-gradient(135deg, #99ccff, #66aaff);
+}
+
+.AdminP-btn-entregado {
+  background: linear-gradient(135deg, #99ff99, #66cc66);
+}
+
+.AdminP-btn-cancelado {
+  background: linear-gradient(135deg, #ff9999, #ff6666);
+}
+
+.AdminP-btn-en-camino:hover:not(:disabled) {
+  background: linear-gradient(135deg, #66aaff, #3388ff);
+}
+
+.AdminP-btn-entregado:hover:not(:disabled) {
+  background: linear-gradient(135deg, #66cc66, #44aa44);
+}
+
+.AdminP-btn-cancelado:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff6666, #ff3333);
+}
+
+/* Mensaje cuando no hay compras */
+.AdminP-purchases-history > p {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+  background: #f9f9f9;
+  border: 2px inset #f3f3f3;
+  margin: 10px 0;
+}
+
+.AdminP-footer {
+  padding: 0;
+  width: 750px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: repeating-linear-gradient(45deg, #BFDBFE, #BFDBFE 10px, #DBEAFE 10px, #DBEAFE 20px);
+  text-align: center;
+  border: 1px solid #000000;
+}
+
+/* Responsive para móviles manteniendo el estilo retro */
+@media (max-width: 768px) {
+  .AdminP-main {
+    flex-direction: column;
+    width: 95%;
+  }
+  
+  .AdminP-container-inner {
+    width: 100%;
+  }
+  
+  .AdminP-container-inner-right {
+    width: 100%;
+    margin: 5px;
+  }
+  
+  .AdminP-purchase-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .AdminP-product-image {
+    align-self: center;
+  }
+  
+  .AdminP-action-buttons {
+    justify-content: center;
+  }
+}

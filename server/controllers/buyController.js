@@ -143,4 +143,83 @@ const obtenerComprasPorComprador = async (req, res) => {
   }
 };
 
-module.exports = { crearCompra, obtenerVentasPorVendedor, obtenerComprasPorComprador };
+const obtenerTodasLasCompras = async (req, res) => {
+  try {
+    const compras = await Buy.find({})
+      .populate({
+        path: "productos.producto",
+        select: "nombre foto"
+      })
+      .populate({
+        path: "productos.vendedor", 
+        select: "username"
+      })
+      .populate({
+        path: "comprador",
+        select: "username"
+      })
+      .sort({ fechaCompra: -1 }); // Ordenar por fecha más reciente
+
+    // Transformar los datos para mostrar cada producto por separado
+    const todasLasCompras = [];
+
+    compras.forEach(compra => {
+      compra.productos.forEach(prod => {
+        todasLasCompras.push({
+          _id: `${compra._id}_${prod.producto._id}`, // ID único para cada item
+          compraId: compra._id, // ID de la compra original para actualizar estado
+          nombreProducto: prod.producto.nombre,
+          fotoProducto: prod.producto.foto,
+          nombreVendedor: prod.vendedor.username,
+          nombreComprador: compra.comprador.username,
+          fechaCompra: compra.fechaCompra,
+          cantidad: prod.cantidad,
+          precioUnitario: prod.precioUnitario,
+          totalProducto: prod.cantidad * prod.precioUnitario,
+          metodoPago: compra.metodoPago,
+          direccionEnvio: compra.direccionEnvio,
+          telefonoContacto: compra.telefonoContacto,
+          estado: compra.estado
+        });
+      });
+    });
+
+    res.status(200).json({ compras: todasLasCompras });
+  } catch (error) {
+    console.error("❌ Error al obtener todas las compras:", error);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+};
+
+const actualizarEstadoCompra = async (req, res) => {
+  try {
+    const { compraId } = req.params;
+    const { nuevoEstado } = req.body;
+
+    // Validar que el estado sea válido
+    const estadosValidos = ["Pendiente", "En camino", "Entregado", "Cancelado"];
+    if (!estadosValidos.includes(nuevoEstado)) {
+      return res.status(400).json({ message: "Estado inválido." });
+    }
+
+    const compra = await Buy.findByIdAndUpdate(
+      compraId,
+      { estado: nuevoEstado },
+      { new: true }
+    );
+
+    if (!compra) {
+      return res.status(404).json({ message: "Compra no encontrada." });
+    }
+
+    res.status(200).json({ 
+      message: "Estado actualizado correctamente.",
+      nuevoEstado: nuevoEstado
+    });
+  } catch (error) {
+    console.error("❌ Error al actualizar el estado:", error);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+};
+
+module.exports = { crearCompra, obtenerVentasPorVendedor, obtenerComprasPorComprador, obtenerTodasLasCompras, actualizarEstadoCompra };

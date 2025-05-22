@@ -10,6 +10,7 @@ import HistorialCompras from "./components/HistoryClient"
 import HistorialVentas from "./components/HistorySeller"
 import Messages from "./components/Messages"
 import Product from "./components/Product"
+import Admin from "./components/AdminCompras"
 import React, { useState } from "react";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/HistSeller" element={<HistorialVentas />} />
         <Route path="/Product/:id" element={<Product />} />
         <Route path="/Messages" element={<Messages />} />
+        <Route path="/Admin" element={<Admin />} />
         <Route path="*" element={<Landing />} />
       </Routes>
     </Router>
