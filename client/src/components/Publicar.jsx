@@ -2,11 +2,18 @@ import React, { useEffect, useState } from 'react';
 import './PublicarStyle.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Publicar() {
   const [usuario, setUsuario] = useState(null);
   const [file, setFile] = useState(null);
-  const [productos, setProductos] = useState([]); // <-- Para guardar los productos
+  const [productos, setProductos] = useState([]);
+  const navigate = useNavigate()
+        
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion");
+  };
 
   // Recuperar el usuario al cargar la página
   useEffect(() => {
@@ -95,7 +102,7 @@ function Publicar() {
         <header>
           <img className="Pub-logo-image" src="/logo.png" alt="Logo" />
           <nav>
-            <a href="#">Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar sesión</a>
           </nav>
         </header>
 

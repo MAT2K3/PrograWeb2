@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './BusquedaAvanzada.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function BusquedaAvanzada() {
   const [usuario, setUsuario] = useState(null);
@@ -12,9 +13,18 @@ function BusquedaAvanzada() {
   const [vendedor, setVendedor] = useState('');
   const [plataforma, setPlataforma] = useState('');
   const [productos, setProductos] = useState([]);
+  const navigate = useNavigate()
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion");
+  };
   
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
+    if (!storedUser) {
+      navigate("/");
+    }
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUsuario(parsedUser);
@@ -65,7 +75,7 @@ function BusquedaAvanzada() {
         <header>
           <img className="BA-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a href="#">Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar sesión</a>
           </nav>
         </header>
         <nav className="BA-second-nav">

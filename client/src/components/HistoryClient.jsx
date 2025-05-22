@@ -2,10 +2,17 @@ import React, { useEffect, useState } from 'react';
 import './HistoryC.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function HistorialCompras() {
   const [usuario, setUsuario] = useState(null);
   const [compras, setCompras] = useState([]);
+  const navigate = useNavigate()
+    
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion");
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
@@ -37,7 +44,7 @@ function HistorialCompras() {
         <header>
           <img src="/logo.png" alt="Logo" className="HistC-logo-image" />
           <nav>
-            <a href="#">Cerrar Sesión</a>
+            <a onClick={cerrarSesion}>Cerrar Sesión</a>
           </nav>
         </header>
 

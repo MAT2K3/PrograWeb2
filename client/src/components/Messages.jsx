@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './Messages.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Messages() {
   const [usuario, setUsuario] = useState(null);
+  const navigate = useNavigate()
+        
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion");
+  };
 
   useEffect(() => {
         const storedUser = localStorage.getItem("usuario");
@@ -21,7 +28,7 @@ function Messages() {
         <header>
           <img className="Msg-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a href="#">Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar sesión</a>
           </nav>
         </header>
 

@@ -2,14 +2,24 @@ import React, { useEffect, useState } from 'react';
 import './AdminCompras.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function AdminPurchases() {
   const [usuario, setUsuario] = useState(null);
   const [compras, setCompras] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion");
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
+    if (!storedUser) {
+      navigate("/");
+    }
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUsuario(parsedUser);
@@ -71,7 +81,7 @@ function AdminPurchases() {
         <header>
           <img src="/logo.png" alt="Logo" className="AdminP-logo-image" />
           <nav>
-            <a href="#">Cerrar Sesión</a>
+            <a onClick={cerrarSesion}>Cerrar Sesión</a>
           </nav>
         </header>
 

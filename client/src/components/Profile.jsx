@@ -19,13 +19,13 @@ function Profile() {
 
   const cerrarSesion = () => {
     localStorage.removeItem("usuario");
-    navigate("/InicioSesion"); // Cambia por tu ruta de login
+    navigate("/InicioSesion");
   };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (!storedUser) {
-      navigate("/"); // Cambia por tu landing page
+      navigate("/");
     }
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -123,7 +123,7 @@ function Profile() {
         <header>
           <img className="Prfl-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a href="#" onClick={cerrarSesion}>Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar sesión</a>
           </nav>
         </header>
         <nav className="Pub-second-nav">

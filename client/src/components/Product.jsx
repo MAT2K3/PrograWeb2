@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import './Product.css';
+import { useNavigate } from 'react-router-dom';
 
 function Product() {
   const [usuario, setUsuario] = useState(null);
@@ -12,6 +13,12 @@ function Product() {
   const [cantidad, setCantidad] = useState(1); // Estado para la cantidad seleccionada
   const [addingToCart, setAddingToCart] = useState(false); // Estado para controlar el proceso de agregar al carrito
   const [mensaje, setMensaje] = useState(null);
+  const navigate = useNavigate()
+          
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    navigate("/InicioSesion");
+  };
     
   useEffect(() => {
       const storedUser = localStorage.getItem("usuario");
@@ -107,7 +114,7 @@ const handleCantidadChange = (e) => {
         <header>
           <img className="Prod-logo-image"  src="/logo.png" alt="Logo" />
           <nav>
-            <a href="#">Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar sesión</a>
           </nav>
         </header>
         <nav className="Prod-second-nav">
