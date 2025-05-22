@@ -21,7 +21,7 @@ function HistorialVentas() {
       if (!usuario) return;
 
       try {
-        const { data } = await axios.get(`/api/buys/${usuario.id}`);
+        const { data } = await axios.get(`/api/buys/hists/${usuario.id}`);
         setVentas(data.ventas);
       } catch (error) {
         console.error("Error al obtener las ventas:", error);
@@ -82,7 +82,7 @@ function HistorialVentas() {
               <div className="HistS-sale-item" key={index}>
                 <img src={venta.producto.foto} alt="Producto" className="HistS-product-image" />
                 <div className="HistS-sale-details">
-                    <p><strong>Producto:</strong> {venta.producto?.nombre || 'Nombre no disponible'}</p>
+                  <p><strong>Producto:</strong> {venta.producto?.nombre || 'Nombre no disponible'}</p>
                   <p><strong>Cliente:</strong> {venta.comprador?.username || 'Desconocido'}</p>
                   <p><strong>Fecha:</strong> {new Date(venta.fechaCompra).toLocaleDateString()}</p>
                   <p><strong>Cantidad:</strong> {venta.cantidad}</p>

@@ -101,4 +101,46 @@ const obtenerVentasPorVendedor = async (req, res) => {
   }
 };
 
-module.exports = { crearCompra, obtenerVentasPorVendedor };
+const obtenerComprasPorComprador = async (req, res) => {
+  try {
+    const { compradorId } = req.params;
+
+    const compras = await Buy.find({ comprador: compradorId })
+      .populate({
+        path: "productos.producto",
+        select: "nombre foto"
+      })
+      .populate({
+        path: "productos.vendedor", 
+        select: "username"
+      })
+      .sort({ fechaCompra: -1 }); // Ordenar por fecha más reciente
+
+    // Transformar los datos para mostrar cada producto por separado
+    const historialCompras = [];
+
+    compras.forEach(compra => {
+      compra.productos.forEach(prod => {
+        historialCompras.push({
+          _id: `${compra._id}_${prod.producto._id}`, // ID único para cada item
+          nombreProducto: prod.producto.nombre,
+          fotoProducto: prod.producto.foto,
+          nombreVendedor: prod.vendedor.username,
+          fechaCompra: compra.fechaCompra,
+          cantidad: prod.cantidad,
+          precioUnitario: prod.precioUnitario,
+          totalProducto: prod.cantidad * prod.precioUnitario,
+          metodoPago: compra.metodoPago,
+          estado: compra.estado
+        });
+      });
+    });
+
+    res.status(200).json({ compras: historialCompras });
+  } catch (error) {
+    console.error("❌ Error al obtener las compras:", error);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+};
+
+module.exports = { crearCompra, obtenerVentasPorVendedor, obtenerComprasPorComprador };

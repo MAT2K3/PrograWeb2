@@ -71,7 +71,7 @@ function BusquedaAvanzada() {
         <nav className="BA-second-nav">
           <ul>
             <li><Link to = "/Busqueda">Buscar</Link></li>
-            <li><a href="#">Mensajes</a></li>
+            <li><Link to="/Messages">Mensajes</Link></li>
             {usuario && usuario.rol === 'vendedor' && (
               <>
               <li><Link to = "/Publicar">Productos</Link></li>

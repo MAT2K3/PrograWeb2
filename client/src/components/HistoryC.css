@@ -242,6 +242,26 @@ main {
   padding: 20px;
 }
 
+.HistC-purchase-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  background-color: #fdfdfd;
+}
+
+.HistC-purchase-image {
+  width: 150px;
+  height: auto;
+  object-fit: cover;
+}
+
+.HistC-purchase-details {
+  flex: 1;
+}
+
 .HistC-edit-profile label {
   display: block;
   margin-bottom: 5px;
@@ -343,15 +363,6 @@ footer {
   font-size: 1rem;
   border: 3px outset #f3f3f3;
   margin-top: 0;
-}
-
-.HistC-purchase-item {
-  background-color: #fff;
-  border: 2px solid #ccc;
-  margin-top: 10px;
-  padding: 10px;
-  font-size: xx-small;
-  box-shadow: 2px 2px #ccc;
 }
 
 .HistC-purchase-item p {
