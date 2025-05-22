@@ -256,6 +256,26 @@ body {
   margin: 5px 0;
 }
 
+.HistS-sale-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  background-color: #fdfdfd;
+}
+
+.HistS-product-image {
+  width: 150px;
+  height: auto;
+  object-fit: cover;
+}
+
+.HistS-sale-details {
+  flex: 1;
+}
+
 .HistS-footer {
   padding: 0;
   width: 750px;

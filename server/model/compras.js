@@ -15,7 +15,7 @@ const compraSchema = new mongoose.Schema({
   telefonoContacto: { type: String, required: true },
   total: { type: Number, required: true },
   fechaCompra: { type: Date, default: Date.now },
-  estado: { type: String, default: "pendiente" }
+  estado: { type: String, default: "Pendiente" }
 });
 
 module.exports = mongoose.model("Compra", compraSchema);

@@ -163,8 +163,8 @@ function Carrito() {
                   <input type="tel" placeholder="Teléfono" value={telefonoContacto} onChange={e => setTelefonoContacto(e.target.value)} />
                   <select value={metodoPago} onChange={e => setMetodoPago(e.target.value)}>
                     <option value="">Selecciona método de pago</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta">Tarjeta</option>
                   </select>
                   <button type="submit">Confirmar Pedido</button>
                   <button type="button" onClick={() => setMostrarFormularioPago(false)}>

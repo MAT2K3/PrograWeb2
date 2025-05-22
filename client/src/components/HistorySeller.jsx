@@ -5,6 +5,7 @@ import axios from "axios";
 
 function HistorialVentas() {
   const [usuario, setUsuario] = useState(null);
+  const [ventas, setVentas] = useState([]);
 
   useEffect(() => {
       const storedUser = localStorage.getItem("usuario");
@@ -14,6 +15,21 @@ function HistorialVentas() {
         console.log("Datos del usuario:", parsedUser);
       }
     }, []);
+
+    useEffect(() => {
+    const obtenerVentas = async () => {
+      if (!usuario) return;
+
+      try {
+        const { data } = await axios.get(`/api/buys/${usuario.id}`);
+        setVentas(data.ventas);
+      } catch (error) {
+        console.error("Error al obtener las ventas:", error);
+      }
+    };
+
+    obtenerVentas();
+  }, [usuario]);
 
   return (
     <div className="HistS-container">
@@ -58,24 +74,29 @@ function HistorialVentas() {
         </div>
 
         <div className="HistS-container-inner-right">
-          <section className="HistS-sales-history">
-            <h2>Historial de Ventas</h2>
+        <section className="HistS-sales-history">
+          <h2>Historial de Ventas</h2>
 
-            <div className="HistS-sale-item">
-              <p><strong>Producto:</strong> Camiseta Retro Pixel</p>
-              <p><strong>Cliente:</strong> Juan Pérez</p>
-              <p><strong>Fecha:</strong> 2025-05-01</p>
-              <p><strong>Total:</strong> $25.00</p>
-            </div>
-
-            <div className="HistS-sale-item">
-              <p><strong>Producto:</strong> Taza Edición Limitada</p>
-              <p><strong>Cliente:</strong> Laura Gómez</p>
-              <p><strong>Fecha:</strong> 2025-05-03</p>
-              <p><strong>Total:</strong> $15.00</p>
-            </div>
-          </section>
-        </div>
+          {ventas.length > 0 ? (
+            ventas.map((venta, index) => (
+              <div className="HistS-sale-item" key={index}>
+                <img src={venta.producto.foto} alt="Producto" className="HistS-product-image" />
+                <div className="HistS-sale-details">
+                    <p><strong>Producto:</strong> {venta.producto?.nombre || 'Nombre no disponible'}</p>
+                  <p><strong>Cliente:</strong> {venta.comprador?.username || 'Desconocido'}</p>
+                  <p><strong>Fecha:</strong> {new Date(venta.fechaCompra).toLocaleDateString()}</p>
+                  <p><strong>Cantidad:</strong> {venta.cantidad}</p>
+                  <p><strong>Total:</strong> ${venta.precioUnitario * venta.cantidad}</p>
+                  <p><strong>Método de pago:</strong> {venta.metodoPago}</p>
+                  <p><strong>Estado:</strong> {venta.estado}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No se encontraron ventas.</p>
+          )}
+        </section>
+      </div>
       </main>
 
       <footer className="HistS-footer">

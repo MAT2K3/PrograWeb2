@@ -65,4 +65,40 @@ const crearCompra = async (req, res) => {
   }
 };
 
-module.exports = { crearCompra };
+const obtenerVentasPorVendedor = async (req, res) => {
+  try {
+    const { vendedorId } = req.params;
+
+    const compras = await Buy.find({ "productos.vendedor": vendedorId })
+      .populate("comprador", "username")
+      .populate("productos.producto", "nombre foto");
+
+    const ventas = [];
+
+    compras.forEach(compra => {
+      compra.productos.forEach(prod => {
+        if (prod.vendedor.toString() === vendedorId) {
+          ventas.push({
+            producto: {
+              nombre: prod.producto.nombre,
+              foto: prod.producto.foto
+            },
+            comprador: compra.comprador,
+            cantidad: prod.cantidad,
+            precioUnitario: prod.precioUnitario,
+            metodoPago: compra.metodoPago,
+            fechaCompra: compra.fechaCompra,
+            estado: compra.estado
+          });
+        }
+      });
+    });
+
+    res.status(200).json({ ventas });
+  } catch (error) {
+    console.error("❌ Error al obtener las ventas:", error);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+};
+
+module.exports = { crearCompra, obtenerVentasPorVendedor };
