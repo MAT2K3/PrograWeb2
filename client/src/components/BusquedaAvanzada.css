@@ -32,7 +32,7 @@ body {
 
 .BA-main-header {
     margin: auto;
-    width: 950px;
+    width: 750px;
     border: 7px inset #F3F3F3 !important;
     margin-top: 15px;
 }
@@ -103,7 +103,7 @@ body {
 
 .BA-second-nav {
     background-color: #f2f0f0;
-    width: 937px;
+    width: 737px;
     margin: 0 auto;
 }
 
@@ -137,7 +137,7 @@ body {
 }
 
 .BA-main {
-    width: 1000px;
+    width: 800px;
     margin: auto;
     flex: 1; 
     display: flex;
@@ -301,7 +301,7 @@ body {
 }
 
 .BA-posts img {
-    width: 200px;
+    width: 100px;
     height: auto;
 }
 
@@ -334,7 +334,7 @@ body {
 
 footer {
     padding: 0;
-    width: 950px;
+    width: 750px;
     margin: auto;
     margin-top: 10px;
     margin-bottom: 10px;
