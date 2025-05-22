@@ -32,9 +32,18 @@ body {
 
 .BA-main-header {
     margin: auto;
-    width: 750px;
+    width: 950px;
     border: 7px inset #F3F3F3 !important;
     margin-top: 15px;
+}
+
+.BA-main-header a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.BA-main-header a:hover {
+    text-decoration: underline;
 }
 
 .BA-header {
@@ -72,6 +81,7 @@ body {
 
 .BA-logo-image {
     height: 40px;
+    width: auto;
 }
 
 .BA-search-bar input[type="text"] {
@@ -93,7 +103,7 @@ body {
 
 .BA-second-nav {
     background-color: #f2f0f0;
-    width: 750px;
+    width: 937px;
     margin: 0 auto;
 }
 
@@ -127,7 +137,7 @@ body {
 }
 
 .BA-main {
-    width: 800px;
+    width: 1000px;
     margin: auto;
     flex: 1; 
     display: flex;
@@ -283,6 +293,7 @@ body {
     color: #9dc3e3;
     font-size: 1.2rem;
     margin-top: 0;
+    margin-bottom: 5px;
 }
 
 .BA-posts p {
@@ -290,7 +301,8 @@ body {
 }
 
 .BA-posts img {
-    width: 100px;
+    width: 200px;
+    height: auto;
 }
 
 .BA-posts .date {
@@ -303,9 +315,26 @@ body {
     margin-bottom: 10px;
 }
 
+.Prod-Link {
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.Prod-Link:hover {
+    background-color: #f0f0f0;
+}
+
+.TheLink {
+    text-decoration: none;
+    color: inherit;
+}
+
 footer {
     padding: 0;
-    width: 750px;
+    width: 950px;
     margin: auto;
     margin-top: 10px;
     margin-bottom: 10px;

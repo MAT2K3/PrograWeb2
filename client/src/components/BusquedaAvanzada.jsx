@@ -64,21 +64,12 @@ function BusquedaAvanzada() {
       <div className="BA-main-header">
         <header>
           <img className="BA-logo-image" src="logo.png" alt="Logo" />
-          <div className="BA-search-bar">
-            <input type="text" placeholder="buscar..." />
-            <button type="submit">buscar</button>
-          </div>
-
           <nav>
-            <ul>
-              <li><a href="#">Ayuda</a></li>
-              <li><a href="#">Cerrar sesión</a></li>
-            </ul>
+            <a href="#">Cerrar sesión</a>
           </nav>
         </header>
         <nav className="BA-second-nav">
           <ul>
-            <li><a href="#">Inicio</a></li>
             <li><Link to = "/Busqueda">Buscar</Link></li>
             <li><a href="#">Mensajes</a></li>
             {usuario && usuario.rol === 'vendedor' && (
@@ -98,16 +89,13 @@ function BusquedaAvanzada() {
         </nav>
       </div>
 
-      <main>
+      <main className='BA-main'>
         <div className="BA-container-inner">
           <div className="BA-profile-box">
             <h2>{usuario ? usuario.username : "Cargando..."}</h2>
             <img className="Prfl-profile-image" src={usuario?.avatar} />
             <ul>
-              <li><a href="#">Inicio</a></li>
               <li><Link to = "/Profile">Mi perfil</Link></li>
-              <li><a href="#">Amigos</a></li>
-              <li><a href="#">Contacto</a></li>
             </ul>
           </div>
         </div>
@@ -125,6 +113,7 @@ function BusquedaAvanzada() {
               <label htmlFor="BA-fecha_fin">Fecha Fin:</label>
               <input type="date" id="BA-fecha_fin" name="fecha_fin" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)}/>
 
+              <br></br>
               <label htmlFor="BA-vendedor">Seleccionar Vendedor:</label>
               <select id="BA-vendedor" name="vendedor" value={vendedor} onChange={(e) => setVendedor(e.target.value)}>
                 <option value="">Seleccionar vendedor</option>
@@ -150,8 +139,8 @@ function BusquedaAvanzada() {
             <div className="BA-post-container">
               {productos.length > 0 ? (
                 productos.map((producto) => (
-                  <div key={producto._id}>
-                    <Link to={`/Product/${producto._id}`}>
+                  <div key={producto._id} className="Prod-Link">
+                    <Link to={`/Product/${producto._id}`} className='TheLink'>
                     <h2>{producto.nombre}</h2>
                     <p>{producto.descripcion}</p>
                     <img src={producto.foto || 'default.jpg'} alt="Imagen de la publicación" />
