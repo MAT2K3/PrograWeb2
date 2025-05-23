@@ -64,38 +64,91 @@ function Carrito() {
     //setMostrarFormularioPago(false);
   };
 
+  // Función para validar número de teléfono (10 dígitos)
+  const validarTelefono = (telefono) => {
+    // Remover espacios y caracteres especiales, solo quedarse con números
+    const soloNumeros = telefono.replace(/\D/g, '');
+    return soloNumeros.length === 10;
+  };
+
   const realizarCompra = async () => {
-  setMensaje(null); // Limpiar mensaje previo
+    setMensaje(null); // Limpiar mensaje previo
 
-  if (!metodoPago || !direccionEnvio || !telefonoContacto) {
-    return setMensaje({ tipo: "error", texto: "Todos los campos son obligatorios." });
-  }
-
-  try {
-    const response = await fetch("http://localhost:8080/api/buys/buy", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: usuario.id,
-        metodoPago,
-        direccionEnvio,
-        telefonoContacto
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return setMensaje({ tipo: "error", texto: data.message || "Error al comprar." });
+    // VALIDACIÓN 1: Verificar que hay productos en el carrito
+    if (!carrito || carrito.length === 0) {
+      return setMensaje({ 
+        tipo: "error", 
+        texto: "No puedes realizar una compra sin productos en el carrito." 
+      });
     }
 
-    setMensaje({ tipo: "exito", texto: "¡Compra realizada con éxito!" });
-    setMostrarFormularioPago(false);
-    fetchCarrito(usuario.id);
-  } catch (error) {
-    setMensaje({ tipo: "error", texto: "Ocurrió un error en el servidor." });
-  }
-};
+    // VALIDACIÓN 2: Verificar que todos los campos estén llenos
+    if (!metodoPago || !direccionEnvio || !telefonoContacto) {
+      return setMensaje({ 
+        tipo: "error", 
+        texto: "Todos los campos son obligatorios." 
+      });
+    }
+
+    // Validaciones adicionales para campos específicos
+    if (metodoPago.trim() === "") {
+      return setMensaje({ 
+        tipo: "error", 
+        texto: "Debes seleccionar un método de pago." 
+      });
+    }
+
+    if (direccionEnvio.trim() === "") {
+      return setMensaje({ 
+        tipo: "error", 
+        texto: "La dirección de envío no puede estar vacía." 
+      });
+    }
+
+    if (telefonoContacto.trim() === "") {
+      return setMensaje({ 
+        tipo: "error", 
+        texto: "El teléfono de contacto no puede estar vacío." 
+      });
+    }
+
+    // VALIDACIÓN 3: Verificar que el teléfono sea válido (10 dígitos)
+    if (!validarTelefono(telefonoContacto)) {
+      return setMensaje({ 
+        tipo: "error", 
+        texto: "El número de teléfono debe contener exactamente 10 dígitos." 
+      });
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/buys/buy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: usuario.id,
+          metodoPago,
+          direccionEnvio,
+          telefonoContacto
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return setMensaje({ tipo: "error", texto: data.message || "Error al comprar." });
+      }
+
+      setMensaje({ tipo: "exito", texto: "¡Compra realizada con éxito!" });
+      setMostrarFormularioPago(false);
+      // Limpiar los campos del formulario
+      setMetodoPago("");
+      setDireccionEnvio("");
+      setTelefonoContacto("");
+      fetchCarrito(usuario.id);
+    } catch (error) {
+      setMensaje({ tipo: "error", texto: "Ocurrió un error en el servidor." });
+    }
+  };
 
   return (
     <div className="Car-container">
@@ -141,34 +194,56 @@ function Carrito() {
         <div className="Car-container-inner-right">
           <h2>Tu Carrito</h2>
           <div className="Car-cart-items">
-            {carrito.map((item, index) => (
-              <div key={index} className="Car-cart-item">
-                <img
-                  className="Car-cart-item-image"
-                  src={item.producto?.foto || "placeholder.png"}
-                  alt={item.producto?.nombre}
-                />
-                <div className="Car-cart-item-info">
-                  <h3>{item.producto?.nombre}</h3>
-                  <p>Cantidad: {item.cantidad}</p>
-                  <p>Precio: ${item.producto?.precio}</p>
-                  <button className="Car-remove-item" onClick={() => eliminarItem(item._id)}>Eliminar</button>
-                </div>
+            {carrito.length === 0 ? (
+              <div className="Car-empty-cart">
+                <p>Tu carrito está vacío</p>
               </div>
-            ))}
+            ) : (
+              <>
+                {carrito.map((item, index) => (
+                  <div key={index} className="Car-cart-item">
+                    <img
+                      className="Car-cart-item-image"
+                      src={item.producto?.foto || "placeholder.png"}
+                      alt={item.producto?.nombre}
+                    />
+                    <div className="Car-cart-item-info">
+                      <h3>{item.producto?.nombre}</h3>
+                      <p>Cantidad: {item.cantidad}</p>
+                      <p>Precio: ${item.producto?.precio}</p>
+                      <button className="Car-remove-item" onClick={() => eliminarItem(item._id)}>Eliminar</button>
+                    </div>
+                  </div>
+                ))}
 
-            <div className="Car-cart-summary">
-              <h3>Total: ${calcularTotal().toFixed(2)}</h3>
-              <button className="Car-checkout" onClick={() => setMostrarFormularioPago(true)}>Proceder al pago</button>
-            </div>
+                <div className="Car-cart-summary">
+                  <h3>Total: ${calcularTotal().toFixed(2)}</h3>
+                  <button className="Car-checkout" onClick={() => setMostrarFormularioPago(true)}>Proceder al pago</button>
+                </div>
+              </>
+            )}
 
             {mostrarFormularioPago && (
               <div className="Car-pago-formulario">
                 <h3>Finalizar Compra</h3>
                 <form onSubmit={handleSubmitPedido}>
-                  <input type="text" placeholder="Dirección" value={direccionEnvio} onChange={e => setDireccionEnvio(e.target.value)} />
-                  <input type="tel" placeholder="Teléfono" value={telefonoContacto} onChange={e => setTelefonoContacto(e.target.value)} />
-                  <select value={metodoPago} onChange={e => setMetodoPago(e.target.value)}>
+                  <input 
+                    type="text" 
+                    placeholder="Dirección de envío" 
+                    value={direccionEnvio} 
+                    onChange={e => setDireccionEnvio(e.target.value)}
+                  />
+                  <input 
+                    type="tel" 
+                    placeholder="Teléfono (10 dígitos)" 
+                    value={telefonoContacto} 
+                    onChange={e => setTelefonoContacto(e.target.value)}
+                    maxLength="10"
+                  />
+                  <select 
+                    value={metodoPago} 
+                    onChange={e => setMetodoPago(e.target.value)}
+                  >
                     <option value="">Selecciona método de pago</option>
                     <option value="Efectivo">Efectivo</option>
                     <option value="Tarjeta">Tarjeta</option>
@@ -177,10 +252,10 @@ function Carrito() {
                   <button type="button" onClick={() => setMostrarFormularioPago(false)}>
                     Cancelar
                   </button>
-                  
                 </form>
               </div>
             )}
+            
             {mensaje && (
               <div className={`mensaje-${mensaje.tipo}`}>
                 {mensaje.texto}

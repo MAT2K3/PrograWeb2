@@ -275,6 +275,26 @@ Car-main {
     background-color: #dddddd;
 }
 
+.mensaje-exito {
+  background-color: #90EE90;
+  color: #006400;
+  padding: 8px;
+  border: 3px ridge #32CD32;
+  margin: 10px 0;
+  font-weight: bold;
+  box-shadow: 2px 2px #5d6d7e;
+}
+
+.mensaje-error {
+  background-color: #FFB6C1;
+  color: #8B0000;
+  padding: 8px;
+  border: 3px ridge #FF69B4;
+  margin: 10px 0;
+  font-weight: bold;
+  box-shadow: 2px 2px #5d6d7e;
+}
+
 .Car-pago-formulario input[type="text"] {
     width: 100%;
     padding: 8px;
@@ -312,6 +332,60 @@ Car-main {
     background-color: #dddddd;
 }
 
+/* Estilos para carrito vacío - Tema retro */
+.Car-empty-cart {
+    background-color: #bdbdbd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70px;
+    padding: 20px;
+    padding: 8px;
+    border: 3px ridge #bbbbbb;
+    margin: 10px 0;
+    font-weight: bold;
+    box-shadow: 2px 2px #5d6d7e;
+}
+
+.Car-empty-cart-message {
+    text-align: center;
+    background-color: #E8E8E8;
+    color: #4A4A4A;
+    padding: 20px;
+    border: 3px ridge #C0C0C0;
+    margin: 10px 0;
+    font-weight: bold;
+    box-shadow: 2px 2px #5d6d7e;
+    width: 100%;
+    max-width: 500px;
+}
+
+.Car-empty-cart-message h3 {
+    margin: 0 0 10px 0;
+    font-size: inherit;
+}
+
+.Car-empty-cart-message p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.Car-continue-shopping {
+    display: inline-block;
+    background-color: #607f97;
+    color: white;
+    border: 3px ridge rgb(80, 102, 119);
+    padding: 12px 25px;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: background-color 0.2s;
+}
+
+.Car-continue-shopping:hover {
+    background-color: #4a6b85;
+    text-decoration: none;
+    color: white;
+}
 .Car-footer {
     padding: 0;
     width: 750px;

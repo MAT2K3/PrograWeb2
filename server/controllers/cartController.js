@@ -18,7 +18,7 @@ const addToCart = async (req, res) => {
       return res.status(404).json({ message: "Producto no encontrado." });
     }
 
-    // Verificar disponibilidad (si tienes un campo disponibles)
+    // Verificar disponibilidad inicial
     if (producto.disponibles && cantidad > producto.disponibles) {
       return res.status(400).json({ message: "No hay suficientes unidades disponibles." });
     }
@@ -46,8 +46,21 @@ const addToCart = async (req, res) => {
     }
 
     if (itemExistente) {
-      console.log("Producto ya existe en el carrito, actualizando cantidad");
-      itemExistente.cantidad += parseInt(cantidad);
+      console.log("Producto ya existe en el carrito, validando cantidad total");
+      
+      // VALIDACIÓN CLAVE: Verificar que la cantidad total no exceda los disponibles
+      const cantidadTotal = itemExistente.cantidad + parseInt(cantidad);
+      
+      if (producto.disponibles && cantidadTotal > producto.disponibles) {
+        return res.status(400).json({ 
+          message: `No puedes agregar ${cantidad} unidades. Ya tienes ${itemExistente.cantidad} en el carrito y solo hay ${producto.disponibles} disponibles. Máximo puedes agregar ${producto.disponibles - itemExistente.cantidad} más.`,
+          cantidadEnCarrito: itemExistente.cantidad,
+          cantidadDisponible: producto.disponibles,
+          cantidadMaximaAAgregar: producto.disponibles - itemExistente.cantidad
+        });
+      }
+      
+      itemExistente.cantidad = cantidadTotal;
       await itemExistente.save();
     } else {
       console.log("Agregando nuevo producto al carrito");
