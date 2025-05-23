@@ -335,6 +335,17 @@ label {
     color: inherit;
 }
 
+.increment-button {
+    padding: 5px 10px;
+    color: black;
+    background: #ffffff80;
+    border: 3px ridge white;
+}
+
+.increment-button:hover {
+    background-color: #636363;
+}
+
   .reg-mensaje-exito {
   background-color: #90EE90;
   color: #006400;

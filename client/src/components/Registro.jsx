@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import  "./RegistroStyle.css";
 import { Link } from 'react-router-dom';
@@ -22,6 +22,14 @@ function Registro() {
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+      document.title = "Registro de usuario";
+      
+      return () => {
+        document.title = "8BitTreasures";
+      };
+    }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -40,7 +48,6 @@ function Registro() {
     }
   };
 
-  // Función para validar contraseña
   const validarContrasena = (password) => {
     const requisitos = {
       longitud: password.length >= 8,
@@ -54,14 +61,12 @@ function Registro() {
     return { esValida, requisitos };
   };
 
-  // Función para validar fecha de nacimiento
   const validarFechaNacimiento = (fecha) => {
     const fechaNac = new Date(fecha);
     const hoy = new Date();
     const hace100Anos = new Date();
     hace100Anos.setFullYear(hoy.getFullYear() - 100);
 
-    // Resetear horas para comparación de fechas solamente
     hoy.setHours(0, 0, 0, 0);
     fechaNac.setHours(0, 0, 0, 0);
 
@@ -80,7 +85,6 @@ function Registro() {
     e.preventDefault();
     setMensaje(null);
 
-    // Validación 1: Campos vacíos
     const camposObligatorios = ['username', 'nombres', 'apllpat', 'apllmat', 'correo', 'contra', 'confirmarContra', 'fechanacimiento', 'rol'];
     for (const campo of camposObligatorios) {
       if (!formData[campo] || formData[campo].toString().trim() === '') {
@@ -95,12 +99,10 @@ function Registro() {
       }
     }
 
-    // Validación 2: Avatar obligatorio
     if (!formData.avatar) {
       return setMensaje({ tipo: "error", texto: "Debes seleccionar una imagen de perfil." });
     }
 
-    // Validación 3: Validar contraseña
     const { esValida: passwordValida, requisitos } = validarContrasena(formData.contra);
     if (!passwordValida) {
       let mensajeError = "La contraseña debe cumplir con los siguientes requisitos: ";
@@ -116,12 +118,10 @@ function Registro() {
       return setMensaje({ tipo: "error", texto: mensajeError });
     }
 
-    // Validación 4: Confirmar contraseña
     if (formData.contra !== formData.confirmarContra) {
       return setMensaje({ tipo: "error", texto: "Las contraseñas no coinciden." });
     }
 
-    // Validación 5: Fecha de nacimiento
     const { esValida: fechaValida, mensaje: mensajeFecha } = validarFechaNacimiento(formData.fechanacimiento);
     if (!fechaValida) {
       return setMensaje({ tipo: "error", texto: mensajeFecha });
