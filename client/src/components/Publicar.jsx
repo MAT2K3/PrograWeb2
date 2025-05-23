@@ -17,7 +17,14 @@ function Publicar() {
     navigate("/InicioSesion");
   };
 
-  // Recuperar el usuario al cargar la página
+  useEffect(() => {
+              document.title = "Publicar";
+                
+              return () => {
+                document.title = "8BitTreasures";
+              };
+            }, []);
+
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (storedUser) {
@@ -27,9 +34,8 @@ function Publicar() {
     }
   }, []);
 
-  // Obtener los productos del usuario
   const obtenerProductos = async () => {
-    if (!usuario) return; // Evitar que se llame antes de que usuario esté listo
+    if (!usuario) return;
     try {
       const response = await axios.get(`http://localhost:8080/api/products/getposts/${usuario.id}`);
       console.log("Productos obtenidos:", response.data);
@@ -46,27 +52,24 @@ function Publicar() {
     }
   
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Asegura que el mes sea de 2 dígitos
-    const day = date.getDate().toString().padStart(2, "0"); // Asegura que el día sea de 2 dígitos
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
   
     return `${year}-${month}-${day}`;
   };
 
-  // Cada vez que el usuario se cargue (por ejemplo al refrescar), obtener sus productos
   useEffect(() => {
     if (usuario) {
       obtenerProductos();
     }
   }, [usuario]);
 
-  // Función para validar el formulario
   const validarFormulario = (formData) => {
     const title = formData.get('title');
     const description = formData.get('description');
     const price = parseFloat(formData.get('price'));
     const available = parseInt(formData.get('available'));
 
-    // Verificar campos vacíos
     if (!title || title.trim() === '') {
       return { valido: false, mensaje: 'El título es obligatorio' };
     }
@@ -79,12 +82,10 @@ function Publicar() {
       return { valido: false, mensaje: 'La imagen es obligatoria' };
     }
 
-    // Verificar que precio sea mayor que 0
     if (isNaN(price) || price <= 0) {
       return { valido: false, mensaje: 'El precio debe ser mayor que 0' };
     }
 
-    // Verificar que disponibles sea mayor que 0
     if (isNaN(available) || available <= 0) {
       return { valido: false, mensaje: 'La cantidad disponible debe ser mayor que 0' };
     }
@@ -92,7 +93,6 @@ function Publicar() {
     return { valido: true };
   };
 
-  // Manejar la publicación de un nuevo producto
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -106,11 +106,9 @@ function Publicar() {
     formData.append('consoleType', event.target.consoleType.value);
     formData.append('image', file);
 
-    // Validar formulario
     const validacion = validarFormulario(formData);
     if (!validacion.valido) {
       setMensaje({ tipo: 'error', texto: validacion.mensaje });
-      // Limpiar mensaje después de 5 segundos
       setTimeout(() => setMensaje(null), 5000);
       return;
     }
@@ -126,15 +124,13 @@ function Publicar() {
 
       if (response.ok) {
         setMensaje({ tipo: 'exito', texto: '¡Publicación realizada con éxito!' });
-        // Limpiar formulario
         event.target.reset();
         setFile(null);
-        await obtenerProductos(); // Recargar productos
+        await obtenerProductos();
       } else {
         setMensaje({ tipo: 'error', texto: `Error al publicar: ${result.message}` });
       }
       
-      // Limpiar mensaje después de 5 segundos
       setTimeout(() => setMensaje(null), 5000);
     } catch (error) {
       console.error('Error en la publicación:', error);
@@ -143,12 +139,10 @@ function Publicar() {
     }
   };
 
-  // Manejar cambio de archivo
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
-  // Manejar cambio en el input de incremento
   const handleIncrementValueChange = (productId, value) => {
     setIncrementValues(prev => ({
       ...prev,
@@ -156,7 +150,6 @@ function Publicar() {
     }));
   };
 
-  // Incrementar cantidad disponible
   const incrementarCantidad = async (productId) => {
     const cantidad = incrementValues[productId] || 0;
     
@@ -173,8 +166,7 @@ function Publicar() {
 
       if (response.status === 200) {
         setMensaje({ tipo: 'exito', texto: `Se incrementaron ${cantidad} unidades correctamente` });
-        await obtenerProductos(); // Recargar productos para mostrar la nueva cantidad
-        // Limpiar el valor del input
+        await obtenerProductos();
         setIncrementValues(prev => ({
           ...prev,
           [productId]: 0
@@ -332,7 +324,7 @@ function Publicar() {
                           onChange={(e) => handleIncrementValueChange(producto._id, e.target.value)}
                           style={{ width: '80px', padding: '5px' }}
                         />
-                        <button onClick={() => incrementarCantidad(producto._id)}>
+                        <button className='increment-button' onClick={() => incrementarCantidad(producto._id)}>
                           Agregar
                         </button>
                       </div>
@@ -346,7 +338,7 @@ function Publicar() {
       </main>
 
       <footer className="Pub-footer">
-        <p>&copy; 2025 8BitTreasures. Todos los derechos reservados.</p>
+        <p>© 2025 RetroStore - Todos los derechos reservados.</p>
       </footer>
     </div>
   );
