@@ -46,6 +46,7 @@ body {
 
 .Lnd-logo-image {
     height: 40px;
+    width: auto;
 }
 
 .Lnd-hero-image {

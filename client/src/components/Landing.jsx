@@ -10,7 +10,6 @@ function Landing() {
         <nav className="Lnd-nav">
           <ul>
             <li><a href="#about">Sobre Nosotros</a></li>
-            <li><a href="#features">Características</a></li>
             <li><a href="#contact">Contacto</a></li>
           </ul>
         </nav>
