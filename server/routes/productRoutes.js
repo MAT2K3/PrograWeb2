@@ -19,5 +19,6 @@ router.post("/publish", upload.single("image"), productController.registrarProdu
 router.get("/getposts/:user_id", productController.obtenerProductosPorUsuario);
 router.get("/buscar", productController.getProductosFiltrados);
 router.get('/:id', productController.getProductoPorId);
+router.put('/increment/:id', productController.incrementarCantidadDisponible);
 
 module.exports = router;

@@ -8,6 +8,8 @@ function Publicar() {
   const [usuario, setUsuario] = useState(null);
   const [file, setFile] = useState(null);
   const [productos, setProductos] = useState([]);
+  const [mensaje, setMensaje] = useState(null);
+  const [incrementValues, setIncrementValues] = useState({});
   const navigate = useNavigate()
         
   const cerrarSesion = () => {
@@ -57,6 +59,39 @@ function Publicar() {
     }
   }, [usuario]);
 
+  // Función para validar el formulario
+  const validarFormulario = (formData) => {
+    const title = formData.get('title');
+    const description = formData.get('description');
+    const price = parseFloat(formData.get('price'));
+    const available = parseInt(formData.get('available'));
+
+    // Verificar campos vacíos
+    if (!title || title.trim() === '') {
+      return { valido: false, mensaje: 'El título es obligatorio' };
+    }
+    
+    if (!description || description.trim() === '') {
+      return { valido: false, mensaje: 'La descripción es obligatoria' };
+    }
+
+    if (!file) {
+      return { valido: false, mensaje: 'La imagen es obligatoria' };
+    }
+
+    // Verificar que precio sea mayor que 0
+    if (isNaN(price) || price <= 0) {
+      return { valido: false, mensaje: 'El precio debe ser mayor que 0' };
+    }
+
+    // Verificar que disponibles sea mayor que 0
+    if (isNaN(available) || available <= 0) {
+      return { valido: false, mensaje: 'La cantidad disponible debe ser mayor que 0' };
+    }
+
+    return { valido: true };
+  };
+
   // Manejar la publicación de un nuevo producto
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,6 +106,15 @@ function Publicar() {
     formData.append('consoleType', event.target.consoleType.value);
     formData.append('image', file);
 
+    // Validar formulario
+    const validacion = validarFormulario(formData);
+    if (!validacion.valido) {
+      setMensaje({ tipo: 'error', texto: validacion.mensaje });
+      // Limpiar mensaje después de 5 segundos
+      setTimeout(() => setMensaje(null), 5000);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8080/api/products/publish", {
         method: 'POST',
@@ -81,19 +125,67 @@ function Publicar() {
       console.log(result);
 
       if (response.ok) {
-        alert('¡Publicación realizada con éxito!');
-        await obtenerProductos(); // <-- Recargar productos
+        setMensaje({ tipo: 'exito', texto: '¡Publicación realizada con éxito!' });
+        // Limpiar formulario
+        event.target.reset();
+        setFile(null);
+        await obtenerProductos(); // Recargar productos
       } else {
-        alert('Error al publicar: ' + result.message);
+        setMensaje({ tipo: 'error', texto: `Error al publicar: ${result.message}` });
       }
+      
+      // Limpiar mensaje después de 5 segundos
+      setTimeout(() => setMensaje(null), 5000);
     } catch (error) {
       console.error('Error en la publicación:', error);
+      setMensaje({ tipo: 'error', texto: 'Error de conexión al publicar' });
+      setTimeout(() => setMensaje(null), 5000);
     }
   };
 
   // Manejar cambio de archivo
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+  };
+
+  // Manejar cambio en el input de incremento
+  const handleIncrementValueChange = (productId, value) => {
+    setIncrementValues(prev => ({
+      ...prev,
+      [productId]: parseInt(value) || 0
+    }));
+  };
+
+  // Incrementar cantidad disponible
+  const incrementarCantidad = async (productId) => {
+    const cantidad = incrementValues[productId] || 0;
+    
+    if (cantidad <= 0) {
+      setMensaje({ tipo: 'error', texto: 'La cantidad a incrementar debe ser mayor que 0' });
+      setTimeout(() => setMensaje(null), 3000);
+      return;
+    }
+
+    try {
+      const response = await axios.put(`http://localhost:8080/api/products/increment/${productId}`, {
+        cantidad: cantidad
+      });
+
+      if (response.status === 200) {
+        setMensaje({ tipo: 'exito', texto: `Se incrementaron ${cantidad} unidades correctamente` });
+        await obtenerProductos(); // Recargar productos para mostrar la nueva cantidad
+        // Limpiar el valor del input
+        setIncrementValues(prev => ({
+          ...prev,
+          [productId]: 0
+        }));
+      }
+    } catch (error) {
+      console.error('Error al incrementar cantidad:', error);
+      setMensaje({ tipo: 'error', texto: 'Error al incrementar la cantidad' });
+    }
+    
+    setTimeout(() => setMensaje(null), 3000);
   };
 
   return (
@@ -162,8 +254,8 @@ function Publicar() {
                 id="Pub-price"
                 name="price"
                 placeholder="100.99"
-                min="0"
-                step="0.01" // Para permitir decimales como 10.99
+                min="0.01"
+                step="0.01"
               />
 
               <label htmlFor="Pub-available">Disponibles:</label>
@@ -172,8 +264,8 @@ function Publicar() {
                 id="Pub-available"
                 name="available"
                 placeholder="10"
-                min="0"
-                step="1" // Para permitir decimales como 10.99
+                min="1"
+                step="1"
               />
 
               <br></br>
@@ -181,7 +273,7 @@ function Publicar() {
               <select id="Pub-category1" name="platform">
                 <option value="general">General</option>
                 <option value="nintendo">Nintendo</option>
-                <option value="sega">Sega</option>
+                <option value="sony">Sony</option>
                 <option value="microsoft">Microsoft</option>
               </select>
 
@@ -194,10 +286,22 @@ function Publicar() {
               </select>
 
               <label htmlFor="Pub-image">Imagen de la consola:</label>
-              <input type="file" id="Pub-image" name="image" accept="image/*" onChange={handleFileChange} />
+              <input 
+                type="file" 
+                id="Pub-image" 
+                name="image" 
+                accept="image/*" 
+                onChange={handleFileChange}
+              />
 
               <input type="submit" value="Publicar" />
             </form>
+            
+            {mensaje && (
+              <div className={`reg-mensaje-${mensaje.tipo}`}>
+                {mensaje.texto}
+              </div>
+            )}
           </div>
 
           <div className="Pub-posts">
@@ -209,12 +313,30 @@ function Publicar() {
                 productos.map((producto) => (
                   <div key={producto._id} className='Pub-Link'>
                     <Link to={`/Product/${producto._id}`} className='TheLink'>
-                    <h2>{producto.nombre}</h2>
-                    <p>{producto.descripcion}</p>
-                    {/* Mostramos la imagen del producto si existe */}
-                    {producto.foto && <img src={producto.foto} alt="Imagen de la publicación" />}
-                    <p>Fecha: <span className="Pub-date">{formatFecha(producto.fechapublicado)}</span></p>
+                      <h2>{producto.nombre}</h2>
+                      <p>{producto.descripcion}</p>
+                      {producto.foto && <img src={producto.foto} alt="Imagen de la publicación" />}
+                      <p>Fecha: <span className="Pub-date">{formatFecha(producto.fechapublicado)}</span></p>
+                      <p>Precio: ${producto.precio}</p>
+                      <p>Disponibles: {producto.disponibles}</p>
                     </Link>
+                    
+                    <div className="increment-section" style={{ padding: '10px', borderTop: '1px solid #ddd' }}>
+                      <label>Incrementar stock:</label>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '5px' }}>
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Cantidad"
+                          value={incrementValues[producto._id] || ''}
+                          onChange={(e) => handleIncrementValueChange(producto._id, e.target.value)}
+                          style={{ width: '80px', padding: '5px' }}
+                        />
+                        <button onClick={() => incrementarCantidad(producto._id)}>
+                          Agregar
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))
               )}
