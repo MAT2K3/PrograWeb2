@@ -25,6 +25,14 @@ function Profile() {
   };
 
   useEffect(() => {
+    document.title = "Mi Perfil";
+    
+    return () => {
+      document.title = "8BitTreasures";
+    };
+  }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (!storedUser) {
       navigate("/");
@@ -32,12 +40,10 @@ function Profile() {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
 
-      // Formatear fecha si existe
       if (parsedUser.fechanacimiento) {
         parsedUser.fechanacimiento = new Date(parsedUser.fechanacimiento).toISOString().split("T")[0];
       }
 
-      // Inicializar formData con los valores del usuario
       setFormData({
         nombres: parsedUser.nombres,
         apllpat: parsedUser.apllpat,
@@ -60,13 +66,11 @@ function Profile() {
       [name]: value,
     }));
     
-    // Limpiar mensaje cuando el usuario empiece a escribir
     if (mensaje) {
       setMensaje(null);
     }
   };
 
-  // Función para validar contraseña
   const validarContrasena = (password) => {
     const requisitos = {
       longitud: password.length >= 8,
@@ -80,14 +84,12 @@ function Profile() {
     return { esValida, requisitos };
   };
 
-  // Función para validar fecha de nacimiento
   const validarFechaNacimiento = (fecha) => {
     const fechaNac = new Date(fecha);
     const hoy = new Date();
     const hace100Anos = new Date();
     hace100Anos.setFullYear(hoy.getFullYear() - 100);
 
-    // Resetear horas para comparación de fechas solamente
     hoy.setHours(0, 0, 0, 0);
     fechaNac.setHours(0, 0, 0, 0);
 
@@ -102,9 +104,7 @@ function Profile() {
     return { esValida: true };
   };
 
-  // Función para validaciones del frontend
   const validarFormulario = () => {
-    // Validación 1: Campos obligatorios no pueden estar vacíos
     const campos = { nombres: 'Nombre', apllpat: 'Apellido Paterno', apllmat: 'Apellido Materno', contra: 'Contraseña', fechanacimiento: 'Fecha de Nacimiento' };
     
     for (const [campo, nombre] of Object.entries(campos)) {
@@ -117,7 +117,6 @@ function Profile() {
       }
     }
 
-    // Validación 2: Contraseña fuerte
     const { esValida: passwordValida, requisitos } = validarContrasena(formData.contra);
     if (!passwordValida) {
       let mensajeError = "La contraseña debe cumplir con los siguientes requisitos: ";
@@ -134,7 +133,6 @@ function Profile() {
       return false;
     }
 
-    // Validación 3: Confirmar contraseña
     if (formData.contra !== formData.confirmar) {
       setMensaje({ 
         tipo: 'error', 
@@ -143,7 +141,6 @@ function Profile() {
       return false;
     }
 
-    // Validación 4: Fecha de nacimiento
     const { esValida: fechaValida, mensaje: mensajeFecha } = validarFechaNacimiento(formData.fechanacimiento);
     if (!fechaValida) {
       setMensaje({ tipo: 'error', texto: mensajeFecha });
@@ -156,15 +153,12 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Limpiar mensaje anterior
     setMensaje(null);
 
-    // Validar formulario antes de enviar
     if (!validarFormulario()) {
       return;
     }
   
-    // Crear un objeto con los datos que se enviarán (sin username y correo)
     const dataToSend = new FormData();
     dataToSend.append("nombres", formData.nombres.trim());
     dataToSend.append("apllpat", formData.apllpat.trim());
@@ -176,7 +170,6 @@ function Profile() {
       dataToSend.append("image", nuevaImagen);
     }
   
-    // Mostrar los datos a enviar en la consola
     console.log("Datos que se enviarán:");
     console.log({
       Nombre: formData.nombres.trim(),
@@ -196,7 +189,6 @@ function Profile() {
       const result = await response.json();
 
       if (response.ok) {
-        // ✅ Actualiza el estado y el localStorage con los nuevos datos
         const updatedUser = {
           ...usuario,
           nombres: formData.nombres.trim(),
@@ -211,17 +203,16 @@ function Profile() {
         localStorage.setItem("usuario", JSON.stringify(updatedUser));
         setMensaje({ tipo: 'exito', texto: "Perfil actualizado correctamente" });
       } else {
-        // Mostrar mensaje de error del servidor
         setMensaje({ 
           tipo: 'error', 
-          texto: result.message || "❌ Error al actualizar el perfil" 
+          texto: result.message || "Error al actualizar el perfil" 
         });
       }
     } catch (error) {
-      console.error("🚨 Error de conexión o de servidor:", error);
+      console.error("Error de conexión o de servidor:", error);
       setMensaje({ 
         tipo: 'error', 
-        texto: "🚨 Error de conexión con el servidor" 
+        texto: "Error de conexión con el servidor" 
       });
     }
   };
