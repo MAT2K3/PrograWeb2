@@ -15,6 +15,14 @@ function HistorialCompras() {
   };
 
   useEffect(() => {
+      document.title = "Historial de compras";
+      
+      return () => {
+        document.title = "8BitTreasures";
+      };
+    }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);

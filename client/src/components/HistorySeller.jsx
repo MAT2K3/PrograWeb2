@@ -15,6 +15,14 @@ function HistorialVentas() {
   };
 
   useEffect(() => {
+            document.title = "Historial de ventas";
+            
+            return () => {
+              document.title = "8BitTreasures";
+            };
+          }, []);
+
+  useEffect(() => {
       const storedUser = localStorage.getItem("usuario");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
@@ -108,7 +116,7 @@ function HistorialVentas() {
       </main>
 
       <footer className="HistS-footer">
-        <p>© 2025 Mi Sitio Retro. Todos los derechos reservados.</p>
+        <p>© 2025 8BitTreasures. Todos los derechos reservados.</p>
       </footer>
     </div>
   );
