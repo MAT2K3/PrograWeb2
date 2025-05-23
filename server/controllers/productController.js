@@ -4,6 +4,23 @@ const registrarProducto = async (req, res) => {
   try {
     const { title, description, price, available, platform, consoleType, user_id } = req.body;
 
+    // Validaciones del backend
+    if (!title || title.trim() === '') {
+      return res.status(400).json({ message: "El título es obligatorio." });
+    }
+
+    if (!description || description.trim() === '') {
+      return res.status(400).json({ message: "La descripción es obligatoria." });
+    }
+
+    if (!price || parseFloat(price) <= 0) {
+      return res.status(400).json({ message: "El precio debe ser mayor que 0." });
+    }
+
+    if (!available || parseInt(available) <= 0) {
+      return res.status(400).json({ message: "La cantidad disponible debe ser mayor que 0." });
+    }
+
     if (!req.file) {
       return res.status(400).json({ message: "Se requiere una imagen." });
     }
@@ -13,8 +30,8 @@ const registrarProducto = async (req, res) => {
     const nuevoProducto = new Product({
       nombre: title,
       descripcion: description,
-      precio: price,
-      disponibles: available,
+      precio: parseFloat(price),
+      disponibles: parseInt(available),
       plataforma: platform,
       tipoconsola: consoleType,
       foto: fotoProducto,
@@ -96,4 +113,43 @@ const getProductoPorId = async (req, res) => {
   }
 };
 
-module.exports = { registrarProducto, obtenerProductosPorUsuario, getProductosFiltrados, getProductoPorId };
+// Nueva función para incrementar la cantidad disponible
+const incrementarCantidadDisponible = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { cantidad } = req.body;
+
+    // Validar que la cantidad sea un número positivo
+    if (!cantidad || parseInt(cantidad) <= 0) {
+      return res.status(400).json({ message: "La cantidad debe ser un número mayor que 0." });
+    }
+
+    // Buscar el producto por ID
+    const producto = await Product.findById(id);
+    if (!producto) {
+      return res.status(404).json({ message: "Producto no encontrado." });
+    }
+
+    // Incrementar la cantidad disponible
+    producto.disponibles += parseInt(cantidad);
+    
+    // Guardar los cambios
+    await producto.save();
+
+    res.status(200).json({ 
+      message: `Se incrementaron ${cantidad} unidades. Nuevo stock: ${producto.disponibles}`,
+      producto: producto
+    });
+  } catch (error) {
+    console.error("Error al incrementar cantidad:", error);
+    res.status(500).json({ message: "Error del servidor", error: error.message });
+  }
+};
+
+module.exports = { 
+  registrarProducto, 
+  obtenerProductosPorUsuario, 
+  getProductosFiltrados, 
+  getProductoPorId,
+  incrementarCantidadDisponible
+};
