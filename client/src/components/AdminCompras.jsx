@@ -16,6 +16,14 @@ function AdminPurchases() {
   };
 
   useEffect(() => {
+        document.title = "Gestion de compras";
+        
+        return () => {
+          document.title = "8BitTreasures";
+        };
+      }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (!storedUser) {
       navigate("/");
@@ -33,7 +41,11 @@ function AdminPurchases() {
 
       try {
         const { data } = await axios.get(`/api/buys/admin/todas`);
-        setCompras(data.compras);
+        // Filtrar solo las compras que están en estado "Pendiente" o "En camino"
+        const comprasFiltradas = data.compras.filter(compra => 
+          compra.estado === "Pendiente" || compra.estado === "En camino"
+        );
+        setCompras(comprasFiltradas);
       } catch (error) {
         console.error("Error al obtener las compras:", error);
       }
@@ -49,14 +61,21 @@ function AdminPurchases() {
         nuevoEstado: nuevoEstado
       });
 
-      // Actualizar el estado local
-      setCompras(prevCompras => 
-        prevCompras.map(compra => 
-          compra.compraId === compraId 
-            ? { ...compra, estado: nuevoEstado }
-            : compra
-        )
-      );
+      // Si el nuevo estado es "Entregado" o "Cancelado", remover la compra de la lista
+      if (nuevoEstado === "Entregado" || nuevoEstado === "Cancelado") {
+        setCompras(prevCompras => 
+          prevCompras.filter(compra => compra.compraId !== compraId)
+        );
+      } else {
+        // Actualizar el estado local para otros estados
+        setCompras(prevCompras => 
+          prevCompras.map(compra => 
+            compra.compraId === compraId 
+              ? { ...compra, estado: nuevoEstado }
+              : compra
+          )
+        );
+      }
 
       console.log(`Estado actualizado a: ${nuevoEstado}`);
     } catch (error) {
@@ -107,7 +126,7 @@ function AdminPurchases() {
 
         <div className="AdminP-container-inner-right">
           <section className="AdminP-purchases-history">
-            <h2>Gestión de Compras</h2>
+            <h2>Gestión de Compras - Pendientes y En Camino</h2>
 
             {compras.length > 0 ? (
               compras.map((compra, index) => (
@@ -155,7 +174,7 @@ function AdminPurchases() {
                 </div>
               ))
             ) : (
-              <p>No se encontraron compras.</p>
+              <p>No hay compras pendientes o en camino.</p>
             )}
           </section>
         </div>
