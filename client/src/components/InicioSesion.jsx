@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './InicioStyle.css';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,14 @@ function InicioSesion() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   
+  useEffect(() => {
+          document.title = "Inicio de sesion";
+          
+          return () => {
+            document.title = "8BitTreasures";
+          };
+        }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -76,7 +84,7 @@ function InicioSesion() {
       console.log("Respuesta del servidor:", result);
 
       if (response.ok) {
-        console.log("✅ Inicio de sesión exitoso");
+        console.log("Inicio de sesión exitoso");
         
         mostrarMensaje("¡Inicio de sesión exitoso! Redirigiendo...", "exito");
         
