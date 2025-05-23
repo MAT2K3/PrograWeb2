@@ -20,6 +20,14 @@ function Carrito() {
   };
 
   useEffect(() => {
+          document.title = "Carrito";
+          
+          return () => {
+            document.title = "8BitTreasures";
+          };
+        }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -50,8 +58,7 @@ function Carrito() {
         method: "PUT",
       });
 
-      // Vuelve a cargar el carrito después de eliminar
-      fetchCarrito(usuario.id); // tu función que vuelve a traer el carrito del backend
+      fetchCarrito(usuario.id);
     } catch (error) {
       console.error("Error al eliminar el item:", error);
     }
@@ -61,20 +68,16 @@ function Carrito() {
     e.preventDefault();
     realizarCompra();
     console.log("Pedido enviado");
-    //setMostrarFormularioPago(false);
   };
 
-  // Función para validar número de teléfono (10 dígitos)
   const validarTelefono = (telefono) => {
-    // Remover espacios y caracteres especiales, solo quedarse con números
     const soloNumeros = telefono.replace(/\D/g, '');
     return soloNumeros.length === 10;
   };
 
   const realizarCompra = async () => {
-    setMensaje(null); // Limpiar mensaje previo
+    setMensaje(null);
 
-    // VALIDACIÓN 1: Verificar que hay productos en el carrito
     if (!carrito || carrito.length === 0) {
       return setMensaje({ 
         tipo: "error", 
@@ -82,7 +85,6 @@ function Carrito() {
       });
     }
 
-    // VALIDACIÓN 2: Verificar que todos los campos estén llenos
     if (!metodoPago || !direccionEnvio || !telefonoContacto) {
       return setMensaje({ 
         tipo: "error", 
@@ -90,7 +92,6 @@ function Carrito() {
       });
     }
 
-    // Validaciones adicionales para campos específicos
     if (metodoPago.trim() === "") {
       return setMensaje({ 
         tipo: "error", 
@@ -112,7 +113,6 @@ function Carrito() {
       });
     }
 
-    // VALIDACIÓN 3: Verificar que el teléfono sea válido (10 dígitos)
     if (!validarTelefono(telefonoContacto)) {
       return setMensaje({ 
         tipo: "error", 
@@ -140,7 +140,6 @@ function Carrito() {
 
       setMensaje({ tipo: "exito", texto: "¡Compra realizada con éxito!" });
       setMostrarFormularioPago(false);
-      // Limpiar los campos del formulario
       setMetodoPago("");
       setDireccionEnvio("");
       setTelefonoContacto("");
@@ -266,7 +265,7 @@ function Carrito() {
       </main>
 
       <footer>
-        <p>&copy; 2025 8BitTreasures. Todos los derechos reservados.</p>
+        <p>© 2025 8BitTreasures. Todos los derechos reservados.</p>
       </footer>
     </div>
   );
