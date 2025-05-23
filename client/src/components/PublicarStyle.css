@@ -1,9 +1,14 @@
 /* Start https://www.cursors-4u.com */
 * { cursor: url(https://cur.cursors-4u.net/cursors/cur-9/cur830.cur), auto !important; }
 /* End https://www.cursors-4u.com */
+
 @font-face {
     font-family: 'Arial Pixel';
     src: url('PIXEARG_.TTF') format('truetype');
+}
+
+*, *::before, *::after {
+    box-sizing: border-box; /* ✅ Agregado */
 }
 
 * {
@@ -31,7 +36,8 @@ body {
 
 .Pub-main-header {
     margin: auto;
-    width: 750px;
+    width: 100%;
+    max-width: 750px; /* ✅ Modificado */
     border: 7px inset #F3F3F3 !important;
     margin-top: 15px;
 }
@@ -83,15 +89,9 @@ header nav li:first-child {
     width: auto;
 }
 
-.Pub-search-bar input[type="text"] {
-    padding: 5px;
-    background: #ffffff80;
-    border: 3px ridge white;
-}
-
+.Pub-search-bar input[type="text"],
 .Pub-search-bar button {
-    padding: 5px 10px;
-    color: black;
+    padding: 5px;
     background: #ffffff80;
     border: 3px ridge white;
 }
@@ -102,15 +102,15 @@ header nav li:first-child {
 
 .Pub-second-nav {
     background-color: #f2f0f0;
-    width: 737px;
+    width: 100%;
+    max-width: 737px; /* ✅ Modificado */
     margin: 0 auto;
 }
 
 .Pub-second-nav ul {
     list-style: none;
     margin: 0;
-    padding: 5px;
-    padding-left: 20px;
+    padding: 5px 20px;
 }
 
 .Pub-second-nav ul li {
@@ -121,8 +121,6 @@ header nav li:first-child {
 }
 
 .Pub-second-nav ul li:last-child {
-    display: inline;
-    margin-right: 20px;
     border-right: 0;
 }
 
@@ -136,12 +134,14 @@ header nav li:first-child {
 }
 
 main {
-    width: 800px;
+    width: 100%;
+    max-width: 800px; /* ✅ Modificado */
     margin: auto;
     flex: 1;
     display: flex;
     background-color: #e3e3e3;
     justify-content: space-between;
+    gap: 20px;
 }
 
 .Pub-container-inner {
@@ -168,7 +168,7 @@ main {
     text-align: center;
     border: 7px ridge #bbbbbb;
     padding: 1rem;
-    box-shadow: calc((400px + (25px * 2)) * 0.025) calc((400px + (25px * 2)) * 0.025) #5d6d7e;
+    box-shadow: 10px 10px #5d6d7e;
 }
 
 .Pub-user-info {
@@ -182,13 +182,7 @@ main {
     font-size: 5.5px;
 }
 
-.Pub-user-info caption {
-    padding: 3px;
-    font-weight: bold;
-    background-color: #5d6d7e;
-    color: white;
-}
-
+.Pub-user-info caption,
 .Pub-Status caption {
     padding: 3px;
     font-weight: bold;
@@ -235,12 +229,12 @@ main {
 }
 
 .Pub-container-inner-right {
-    margin: 10px 20px;
-    width: 75%;
-    padding: 10px;
-    background: white radial-gradient(circle at 0 0, #b3d3e850 2px, transparent 0);
-    background-size: 4px 4px;
-    border: 3px outset #F3F3F3;
+margin: 10px 20px;
+  width: 75%;
+  padding: 10px;
+  background: white radial-gradient(circle at 0 0, #b3d3e850 2px, transparent 0);
+  background-size: 4px 4px;
+  border: 3px outset #F3F3F3;
 }
 
 label {
@@ -261,7 +255,6 @@ label {
 .Pub-post-form select {
     padding: 4px;
     margin-bottom: 10px;
-    box-sizing: border-box;
     border: 3px ridge #bbbbbb;
 }
 
@@ -269,16 +262,14 @@ label {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
-    box-sizing: border-box;
     border: 3px ridge #bbbbbb;
 }
 
 .Pub-post-form input[type="number"] {
-    width: 18%;
-  padding: 4px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  border: 3px ridge #bbbbbb;
+    width: 30%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 3px ridge #bbbbbb;
 }
 
 .Pub-post-form input[type="file"] {
@@ -286,7 +277,8 @@ label {
 }
 
 .Pub-post-form input[type="submit"] {
-    margin: 10px 199px 0 199px;
+    margin: 10px auto;
+    display: block;
     padding: 5px 10px;
     color: black;
     background: #ffffff80;
@@ -316,8 +308,9 @@ label {
 }
 
 .Pub-posts img {
-    width: 150px;
-    height: auto;
+    width: 100%;
+    max-width: 150px;
+    height: auto; /* ✅ Modificado */
 }
 
 .Pub-posts .Pub-date {
@@ -346,31 +339,110 @@ label {
     background-color: #636363;
 }
 
-  .reg-mensaje-exito {
-  background-color: #90EE90;
-  color: #006400;
-  padding: 8px;
-  border: 3px ridge #32CD32;
-  margin: 10px 0;
-  font-weight: bold;
-  box-shadow: 2px 2px #5d6d7e;
+.reg-mensaje-exito {
+    background-color: #90EE90;
+    color: #006400;
+    padding: 8px;
+    border: 3px ridge #32CD32;
+    margin: 10px 0;
+    font-weight: bold;
+    box-shadow: 2px 2px #5d6d7e;
 }
 
 .reg-mensaje-error {
-  background-color: #FFB6C1;
-  color: #8B0000;
-  padding: 8px;
-  border: 3px ridge #FF69B4;
-  margin: 10px 0;
-  font-weight: bold;
-  box-shadow: 2px 2px #5d6d7e;
+    background-color: #FFB6C1;
+    color: #8B0000;
+    padding: 8px;
+    border: 3px ridge #FF69B4;
+    margin: 10px 0;
+    font-weight: bold;
+    box-shadow: 2px 2px #5d6d7e;
 }
 
 footer {
     padding: 0;
-    width: 750px;
+    width: 100%;
+    max-width: 750px; /* ✅ Modificado */
     margin: 10px auto;
-    background: repeating-linear-gradient(45deg, #BFDBFE, #BFDBFE 10px, #DBEAFE 10px, #DBEAFE 20px);
+    background-color: #b0bec5;
     text-align: center;
-    border: 1px solid #000000;
+}
+
+footer ul {
+display: flex;
+justify-content: center;
+list-style: none;
+padding: 0;
+margin: 10px;
+}
+
+footer ul li {
+margin-right: 20px;
+}
+
+footer ul li a {
+text-decoration: none;
+color: #333;
+}
+
+footer ul li a:hover {
+text-decoration: underline;
+}
+
+footer ul li:first-child {
+margin-right: 5px;
+padding-right: 5px;
+border-right: 1px solid #000;
+}
+
+footer ul li:last-child {
+border-right: 0;
+}
+
+footer .footer-logo-image {
+width: 70px;
+height: auto;
+}
+
+/* ✅ Media Query para Pantallas Móviles */
+@media (max-width: 768px) {
+main {
+flex-direction: column;
+align-items: center;
+}
+
+.Pub-container-inner,
+.Pub-container-inner-right {
+width: 95% !important;
+margin: 10px auto;
+}
+
+.Pub-post-form input[type="number"],
+.Pub-post-form input[type="text"] {
+width: 100% !important;
+}
+
+.Pub-post-form input[type="submit"] {
+margin: 10px auto;
+display: block;
+}
+
+header {
+flex-direction: column;
+align-items: flex-start;
+}
+
+header nav ul {
+flex-direction: column;
+}
+
+.Pub-second-nav ul li {
+display: block;
+margin: 10px 0;
+border-right: none;
+}
+
+footer ul {
+flex-direction: column;
+}
 }

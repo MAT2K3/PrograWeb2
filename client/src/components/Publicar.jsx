@@ -277,6 +277,7 @@ function Publicar() {
                 <option value="especial">Edición especial</option>
               </select>
 
+              <br></br>
               <label htmlFor="Pub-image">Imagen de la consola:</label>
               <input 
                 type="file" 
@@ -338,7 +339,7 @@ function Publicar() {
       </main>
 
       <footer className="Pub-footer">
-        <p>© 2025 RetroStore - Todos los derechos reservados.</p>
+        <p>© 2025 8BitTreasures - Todos los derechos reservados.</p>
       </footer>
     </div>
   );

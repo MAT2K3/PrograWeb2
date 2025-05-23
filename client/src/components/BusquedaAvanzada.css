@@ -342,3 +342,46 @@ footer {
     text-align: center;
     border: 1px solid #000000;
 }
+
+/* ✅ Media Query para Pantallas Móviles */
+@media (max-width: 768px) {
+main {
+flex-direction: column;
+align-items: center;
+}
+
+.BA-container-inner,
+.BA-container-inner-right {
+width: 95% !important;
+margin: 10px auto;
+}
+
+.BA-search-form input[type="number"],
+.BA-search-form input[type="text"] {
+width: 100% !important;
+}
+
+.BA-search-form input[type="submit"] {
+margin: 10px auto;
+display: block;
+}
+
+header {
+flex-direction: column;
+align-items: flex-start;
+}
+
+header nav ul {
+flex-direction: column;
+}
+
+.BA-second-nav ul li {
+display: block;
+margin: 10px 0;
+border-right: none;
+}
+
+footer ul {
+flex-direction: column;
+}
+}
