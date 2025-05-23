@@ -19,6 +19,14 @@ function BusquedaAvanzada() {
     localStorage.removeItem("usuario");
     navigate("/InicioSesion");
   };
+
+  useEffect(() => {
+        document.title = "Busqueda avanzada";
+        
+        return () => {
+          document.title = "8BitTreasures";
+        };
+      }, []);
   
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
@@ -173,7 +181,7 @@ function BusquedaAvanzada() {
       </main>
 
       <footer className="BA-footer">
-        <p>2025 8BitTreasures. Todos los derechos reservados</p>
+        <p>© 2025 8BitTreasures. Todos los derechos reservados.</p>
       </footer>
     </div>
   );
