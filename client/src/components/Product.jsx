@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 
 function Product() {
   const [usuario, setUsuario] = useState(null);
-  const { id } = useParams(); // ✅ Captura el ID de la URL
+  const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cantidad, setCantidad] = useState(1); // Estado para la cantidad seleccionada
-  const [addingToCart, setAddingToCart] = useState(false); // Estado para controlar el proceso de agregar al carrito
+  const [cantidad, setCantidad] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
   const [mensaje, setMensaje] = useState(null);
   const [puedeReseñar, setPuedeReseñar] = useState(false);
   const [comentario, setComentario] = useState("");
@@ -25,7 +25,15 @@ function Product() {
     localStorage.removeItem("usuario");
     navigate("/InicioSesion");
   };
-    
+
+  useEffect(() => {
+              document.title = "Detalles del producto";
+              
+              return () => {
+                document.title = "8BitTreasures";
+              };
+            }, []);
+
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario");
     if (storedUser) {
@@ -64,7 +72,6 @@ function Product() {
       });
   }, [id]);
 
-  // Cargar reseñas del producto
   useEffect(() => {
     if (id) {
       axios.get(`http://localhost:8080/api/reviews/producto/${id}`)
@@ -91,7 +98,6 @@ function Product() {
           (c.estado === "Entregado" || c.estado === "Cancelado")
         );
         
-        // También verificar que no haya dejado ya una reseña
         const yaReseñado = reseñas.some(r => r.usuario._id === usuario.id);
         
         setPuedeReseñar(compraValida && !yaReseñado);
@@ -103,7 +109,6 @@ function Product() {
     setCantidad(parseInt(e.target.value));
   };
 
-  // Función para agregar al carrito
   const handleAddToCart = async (e) => {
     e.preventDefault();
     
@@ -116,14 +121,12 @@ function Product() {
       setAddingToCart(true);
       setMensaje(null);
       
-      // Preparar los datos a enviar
       const cartData = {
         userId: usuario.id,
         productId: producto._id,
         cantidad: cantidad
       };
       
-      // Registrar los datos para depuración
       console.log('Datos enviados al servidor:', cartData);
       
       const response = await axios.post('http://localhost:8080/api/carts/add', cartData);
@@ -131,7 +134,6 @@ function Product() {
       console.log('Respuesta del servidor:', response.data);
       setMensaje({ tipo: 'exito', texto: 'Producto agregado al carrito correctamente.' });
       
-      // Opcional: Resetear cantidad a 1 después de agregar
       setCantidad(1);
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
@@ -170,15 +172,12 @@ function Product() {
       
       const response = await axios.post('http://localhost:8080/api/reviews/crear', reseñaData);
       
-      // Agregar la nueva reseña a la lista
       setReseñas(prevReseñas => [response.data.reseña, ...prevReseñas]);
       
-      // Limpiar el formulario
       setComentario('');
       setRating(null);
-      setPuedeReseñar(false); // Ya no puede reseñar
+      setPuedeReseñar(false);
       
-      // Recargar el producto para obtener la nueva calificación promedio
       const productoResponse = await fetch(`http://localhost:8080/api/products/${id}`);
       const productoActualizado = await productoResponse.json();
       setProducto(productoActualizado);
@@ -193,7 +192,6 @@ function Product() {
     }
   };
 
-  // Función para renderizar estrellas
   const renderStars = (calificacion) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -259,7 +257,6 @@ function Product() {
             <p><strong>Disponibles:</strong> {parseInt(producto.disponibles)}</p>
             <p><strong>Vendido por:</strong> <Link to={"/Messages"}>{producto.publicador.username}</Link></p>
             
-            {/* Mostrar calificación promedio */}
             {producto.calificacionPromedio > 0 && (
               <div className="product-rating">
                 <strong>Calificación: </strong>
@@ -332,7 +329,6 @@ function Product() {
               </div>
             )}
 
-            {/* Mostrar reseñas existentes */}
             <div className="reviews-list">
               {loadingReseñas ? (
                 <p>Cargando reseñas...</p>
