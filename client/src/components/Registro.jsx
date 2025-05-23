@@ -19,6 +19,7 @@ function Registro() {
   });
 
   const [fileName, setFileName] = useState("Selecciona una imagen");
+  const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -39,14 +40,93 @@ function Registro() {
     }
   };
 
+  // Función para validar contraseña
+  const validarContrasena = (password) => {
+    const requisitos = {
+      longitud: password.length >= 8,
+      mayuscula: /[A-Z]/.test(password),
+      minuscula: /[a-z]/.test(password),
+      numero: /\d/.test(password),
+      especial: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    };
+
+    const esValida = Object.values(requisitos).every(req => req);
+    return { esValida, requisitos };
+  };
+
+  // Función para validar fecha de nacimiento
+  const validarFechaNacimiento = (fecha) => {
+    const fechaNac = new Date(fecha);
+    const hoy = new Date();
+    const hace100Anos = new Date();
+    hace100Anos.setFullYear(hoy.getFullYear() - 100);
+
+    // Resetear horas para comparación de fechas solamente
+    hoy.setHours(0, 0, 0, 0);
+    fechaNac.setHours(0, 0, 0, 0);
+
+    if (fechaNac >= hoy) {
+      return { esValida: false, mensaje: "La fecha de nacimiento no puede ser hoy o en el futuro." };
+    }
+
+    if (fechaNac < hace100Anos) {
+      return { esValida: false, mensaje: "La fecha de nacimiento no puede ser de hace más de 100 años." };
+    }
+
+    return { esValida: true };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (formData.contra !== formData.confirmarContra) {
-      alert("Las contraseñas no coinciden");
-      return;
+    setMensaje(null);
+
+    // Validación 1: Campos vacíos
+    const camposObligatorios = ['username', 'nombres', 'apllpat', 'apllmat', 'correo', 'contra', 'confirmarContra', 'fechanacimiento', 'rol'];
+    for (const campo of camposObligatorios) {
+      if (!formData[campo] || formData[campo].toString().trim() === '') {
+        return setMensaje({ 
+          tipo: "error", 
+          texto: `El campo ${campo === 'apllpat' ? 'apellido paterno' : 
+                             campo === 'apllmat' ? 'apellido materno' : 
+                             campo === 'fechanacimiento' ? 'fecha de nacimiento' :
+                             campo === 'confirmarContra' ? 'confirmar contraseña' :
+                             campo} es obligatorio.` 
+        });
+      }
     }
-  
+
+    // Validación 2: Avatar obligatorio
+    if (!formData.avatar) {
+      return setMensaje({ tipo: "error", texto: "Debes seleccionar una imagen de perfil." });
+    }
+
+    // Validación 3: Validar contraseña
+    const { esValida: passwordValida, requisitos } = validarContrasena(formData.contra);
+    if (!passwordValida) {
+      let mensajeError = "La contraseña debe cumplir con los siguientes requisitos: ";
+      const faltantes = [];
+      
+      if (!requisitos.longitud) faltantes.push("mínimo 8 caracteres");
+      if (!requisitos.mayuscula) faltantes.push("al menos 1 letra mayúscula");
+      if (!requisitos.minuscula) faltantes.push("al menos 1 letra minúscula");
+      if (!requisitos.numero) faltantes.push("al menos 1 número");
+      if (!requisitos.especial) faltantes.push("al menos 1 carácter especial");
+      
+      mensajeError += faltantes.join(", ") + ".";
+      return setMensaje({ tipo: "error", texto: mensajeError });
+    }
+
+    // Validación 4: Confirmar contraseña
+    if (formData.contra !== formData.confirmarContra) {
+      return setMensaje({ tipo: "error", texto: "Las contraseñas no coinciden." });
+    }
+
+    // Validación 5: Fecha de nacimiento
+    const { esValida: fechaValida, mensaje: mensajeFecha } = validarFechaNacimiento(formData.fechanacimiento);
+    if (!fechaValida) {
+      return setMensaje({ tipo: "error", texto: mensajeFecha });
+    }
+
     const data = new FormData();
     data.append("username", formData.username);
     data.append("nombres", formData.nombres);
@@ -58,31 +138,33 @@ function Registro() {
     data.append("rol", formData.rol);
     data.append("avatar", formData.avatar);
     data.append("extension", formData.extension);
-  
+
     try {
       console.log("Enviando FormData:");
       for (let pair of data.entries()) {
         console.log(pair[0], pair[1]);
       }
-  
+
       const response = await fetch("http://localhost:8080/api/users/register", {
         method: "POST",
         body: data,
       });
-  
+
       const result = await response.json();
-  
+
       console.log("Respuesta del servidor (JSON):", result);
-  
+
       if (response.ok) {
-        alert("Usuario registrado con éxito");
-        navigate("/InicioSesion");
+        setMensaje({ tipo: "exito", texto: "Usuario registrado con éxito. Redirigiendo..." });
+        setTimeout(() => {
+          navigate("/InicioSesion");
+        }, 2000);
       } else {
-        alert("Error: " + result.message);
+        setMensaje({ tipo: "error", texto: result.message || "Error al registrar usuario." });
       }
     } catch (error) {
       console.error("Error al registrar usuario:", error);
-      alert("Ocurrió un error, intenta nuevamente");
+      setMensaje({ tipo: "error", texto: "Ocurrió un error en el servidor, intenta nuevamente." });
     }
   };
 
@@ -92,38 +174,38 @@ function Registro() {
         <h1>★ Registrate</h1>
         <div className="reg-input-box">
           <div className="reg-input-field">
-            <input type="text" name="username" placeholder="Usuario" required onChange={handleChange} />
+            <input type="text" name="username" placeholder="Usuario" onChange={handleChange} />
             <i className="bx bxs-user-circle"></i>
           </div>
           <div className="reg-input-field">
-            <input type="text" name="nombres" placeholder="Nombre" required onChange={handleChange} />
+            <input type="text" name="nombres" placeholder="Nombre" onChange={handleChange} />
             <i className="bx bxs-user-pin"></i>
           </div>
           <div className="reg-input-field">
-            <input type="text" name="apllpat" placeholder="Apellido Paterno" required onChange={handleChange} />
+            <input type="text" name="apllpat" placeholder="Apellido Paterno" onChange={handleChange} />
             <i className="bx bxs-user-pin"></i>
           </div>
           <div className="reg-input-field">
-            <input type="text" name="apllmat" placeholder="Apellido Materno" required onChange={handleChange} />
+            <input type="text" name="apllmat" placeholder="Apellido Materno" onChange={handleChange} />
             <i className="bx bxs-user-pin"></i>
           </div>
           <div className="reg-input-field">
-            <input type="email" name="correo" placeholder="Email" required onChange={handleChange} />
+            <input type="email" name="correo" placeholder="Email" onChange={handleChange} />
             <i className="bx bx-envelope"></i>
           </div>
           <div className="reg-input-field">
-            <input type="password" name="contra" placeholder="Contraseña" required onChange={handleChange} />
+            <input type="password" name="contra" placeholder="Contraseña" onChange={handleChange} />
             <i className="bx bx-lock"></i>
           </div>
           <div className="reg-input-field">
-            <input type="password" name="confirmarContra" placeholder="confirmar contraseña" required onChange={handleChange} />
+            <input type="password" name="confirmarContra" placeholder="confirmar contraseña" onChange={handleChange} />
             <i className="bx bx-lock"></i>
           </div>
           <div className="reg-input-field">
-            <input type="date" name="fechanacimiento" required onChange={handleChange} />
+            <input type="date" name="fechanacimiento" onChange={handleChange} />
           </div>
           <div className="reg-input-select">
-            <select name="rol" required onChange={handleChange} >
+            <select name="rol" onChange={handleChange} >
               <option value="" disabled selected>Selecciona un rol</option>
               <option value="comprador">Comprador</option>
               <option value="vendedor">Vendedor</option>
@@ -131,15 +213,22 @@ function Registro() {
             <i className="bx bx-user"></i>
           </div>
           <div className="reg-input-image">
-            <input type="file" required id="imagen_perfil" accept="image/*" onChange={handleFileChange} />
+            <input type="file" id="imagen_perfil" accept="image/*" onChange={handleFileChange} />
             <input type="text" placeholder={fileName} id="nombre-archivo" />
             <i className="bx bx-image"></i>
             <label htmlFor="imagen_perfil"></label>
           </div>
         </div>
+        
         <button type="submit" className="reg-btn">
           Registrarse
         </button>
+
+        {mensaje && (
+          <div className={`reg-mensaje-${mensaje.tipo}`}>
+            {mensaje.texto}
+          </div>
+        )}
       </form>
     </div>
   );

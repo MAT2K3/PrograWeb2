@@ -13,8 +13,10 @@ function Profile() {
     correo: "",
     username: "",
     contra: "",
+    confirmar: "",
     fechanacimiento: "",
   });
+  const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate()
 
   const cerrarSesion = () => {
@@ -43,6 +45,7 @@ function Profile() {
         correo: parsedUser.correo,
         username: parsedUser.username,
         contra: parsedUser.contra,
+        confirmar: parsedUser.contra,
         fechanacimiento: parsedUser.fechanacimiento,
       });
 
@@ -56,38 +59,132 @@ function Profile() {
       ...prev,
       [name]: value,
     }));
+    
+    // Limpiar mensaje cuando el usuario empiece a escribir
+    if (mensaje) {
+      setMensaje(null);
+    }
+  };
+
+  // Función para validar contraseña
+  const validarContrasena = (password) => {
+    const requisitos = {
+      longitud: password.length >= 8,
+      mayuscula: /[A-Z]/.test(password),
+      minuscula: /[a-z]/.test(password),
+      numero: /\d/.test(password),
+      especial: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    };
+
+    const esValida = Object.values(requisitos).every(req => req);
+    return { esValida, requisitos };
+  };
+
+  // Función para validar fecha de nacimiento
+  const validarFechaNacimiento = (fecha) => {
+    const fechaNac = new Date(fecha);
+    const hoy = new Date();
+    const hace100Anos = new Date();
+    hace100Anos.setFullYear(hoy.getFullYear() - 100);
+
+    // Resetear horas para comparación de fechas solamente
+    hoy.setHours(0, 0, 0, 0);
+    fechaNac.setHours(0, 0, 0, 0);
+
+    if (fechaNac >= hoy) {
+      return { esValida: false, mensaje: "La fecha de nacimiento no puede ser hoy o en el futuro." };
+    }
+
+    if (fechaNac < hace100Anos) {
+      return { esValida: false, mensaje: "La fecha de nacimiento no puede ser de hace más de 100 años." };
+    }
+
+    return { esValida: true };
+  };
+
+  // Función para validaciones del frontend
+  const validarFormulario = () => {
+    // Validación 1: Campos obligatorios no pueden estar vacíos
+    const campos = { nombres: 'Nombre', apllpat: 'Apellido Paterno', apllmat: 'Apellido Materno', contra: 'Contraseña', fechanacimiento: 'Fecha de Nacimiento' };
+    
+    for (const [campo, nombre] of Object.entries(campos)) {
+      if (!formData[campo] || !formData[campo].toString().trim()) {
+        setMensaje({ 
+          tipo: 'error', 
+          texto: `El campo ${nombre} no puede estar vacío.` 
+        });
+        return false;
+      }
+    }
+
+    // Validación 2: Contraseña fuerte
+    const { esValida: passwordValida, requisitos } = validarContrasena(formData.contra);
+    if (!passwordValida) {
+      let mensajeError = "La contraseña debe cumplir con los siguientes requisitos: ";
+      const faltantes = [];
+      
+      if (!requisitos.longitud) faltantes.push("mínimo 8 caracteres");
+      if (!requisitos.mayuscula) faltantes.push("al menos 1 letra mayúscula");
+      if (!requisitos.minuscula) faltantes.push("al menos 1 letra minúscula");
+      if (!requisitos.numero) faltantes.push("al menos 1 número");
+      if (!requisitos.especial) faltantes.push("al menos 1 carácter especial");
+      
+      mensajeError += faltantes.join(", ") + ".";
+      setMensaje({ tipo: 'error', texto: mensajeError });
+      return false;
+    }
+
+    // Validación 3: Confirmar contraseña
+    if (formData.contra !== formData.confirmar) {
+      setMensaje({ 
+        tipo: 'error', 
+        texto: "Las contraseñas no coinciden." 
+      });
+      return false;
+    }
+
+    // Validación 4: Fecha de nacimiento
+    const { esValida: fechaValida, mensaje: mensajeFecha } = validarFechaNacimiento(formData.fechanacimiento);
+    if (!fechaValida) {
+      setMensaje({ tipo: 'error', texto: mensajeFecha });
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Limpiar mensaje anterior
+    setMensaje(null);
+
+    // Validar formulario antes de enviar
+    if (!validarFormulario()) {
+      return;
+    }
   
-    // Crear un objeto con los datos que se enviarán
+    // Crear un objeto con los datos que se enviarán (sin username y correo)
     const dataToSend = new FormData();
-    dataToSend.append("nombres", formData.nombres);
-    dataToSend.append("apllpat", formData.apllpat);
-    dataToSend.append("apllmat", formData.apllmat);
-    dataToSend.append("correo", formData.correo);
-    dataToSend.append("username", formData.username);
+    dataToSend.append("nombres", formData.nombres.trim());
+    dataToSend.append("apllpat", formData.apllpat.trim());
+    dataToSend.append("apllmat", formData.apllmat.trim());
     dataToSend.append("contra", formData.contra);
     dataToSend.append("fechanacimiento", formData.fechanacimiento);
   
     if (nuevaImagen) {
       dataToSend.append("image", nuevaImagen);
-    } else {
-      dataToSend.append("avatarActual", usuario?.avatar || "");
     }
   
     // Mostrar los datos a enviar en la consola
     console.log("Datos que se enviarán:");
     console.log({
-      Nombre: formData.nombres,
-      ApllPat: formData.apllpat,
-      ApllMat: formData.apllmat,
-      Email: formData.correo,
-      Usuario: formData.username,
+      Nombre: formData.nombres.trim(),
+      ApllPat: formData.apllpat.trim(),
+      ApllMat: formData.apllmat.trim(),
       Contraseña: formData.contra,
       FechaNacimiento: formData.fechanacimiento,
-      Imagen: nuevaImagen ? nuevaImagen.name : usuario?.avatar || "No se cambió imagen"
+      Imagen: nuevaImagen ? nuevaImagen.name : "No se cambió imagen"
     });
   
     try {
@@ -96,24 +193,36 @@ function Profile() {
         body: dataToSend,
       });
   
-      if (response.ok) {
-        const result = await response.json(); // Asegúrate que tu backend devuelve JSON actualizado
+      const result = await response.json();
 
+      if (response.ok) {
         // ✅ Actualiza el estado y el localStorage con los nuevos datos
         const updatedUser = {
           ...usuario,
-          ...formData,
+          nombres: formData.nombres.trim(),
+          apllpat: formData.apllpat.trim(),
+          apllmat: formData.apllmat.trim(),
+          contra: formData.contra,
+          fechanacimiento: formData.fechanacimiento,
           avatar: nuevaImagen ? URL.createObjectURL(nuevaImagen) : usuario.avatar,
         };
 
         setUsuario(updatedUser);
         localStorage.setItem("usuario", JSON.stringify(updatedUser));
-        alert("✅ Perfil actualizado correctamente");
+        setMensaje({ tipo: 'exito', texto: "Perfil actualizado correctamente" });
       } else {
-        console.error("❌ Error al enviar los datos. Código:", response.status);
+        // Mostrar mensaje de error del servidor
+        setMensaje({ 
+          tipo: 'error', 
+          texto: result.message || "❌ Error al actualizar el perfil" 
+        });
       }
     } catch (error) {
       console.error("🚨 Error de conexión o de servidor:", error);
+      setMensaje({ 
+        tipo: 'error', 
+        texto: "🚨 Error de conexión con el servidor" 
+      });
     }
   };
 
@@ -178,24 +287,44 @@ function Profile() {
               <input type="text" name="apllmat" value={formData.apllmat || ''} onChange={handleChange} />
 
               <label htmlFor="correo">Email:</label>
-              <input type="text" name="correo" value={formData.correo || ''} onChange={handleChange} />
+              <input 
+                type="text" 
+                name="correo" 
+                value={formData.correo || ''} 
+                disabled
+                style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+                title="El correo no se puede modificar"
+              />
 
               <label htmlFor="username">Usuario:</label>
-              <input type="text" name="username" value={formData.username || ''} onChange={handleChange} />
+              <input 
+                type="text" 
+                name="username" 
+                value={formData.username || ''} 
+                disabled
+                style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+                title="El nombre de usuario no se puede modificar"
+              />
 
               <label htmlFor="contra">Contraseña:</label>
               <input type="text" name="contra" value={formData.contra || ''} onChange={handleChange} />
 
               <label htmlFor="confirmar">Confirmar contraseña:</label>
-              <input type="text" name="confirmar" value={formData.contra || ''} onChange={handleChange} />
+              <input type="text" name="confirmar" value={formData.confirmar || ''} onChange={handleChange} />
 
               <label htmlFor="fechanacimiento">Fecha de Nacimiento:</label>
               <input type="date" name="fechanacimiento" value={formData.fechanacimiento || ''} onChange={handleChange} />
 
-              <label htmlFor="image">Imagen de perfil:</label>
+              <label htmlFor="image">Imagen de perfil (opcional):</label>
               <input type="file" name="image" accept="image/*" onChange={(e) => setNuevaImagen(e.target.files[0])} />
 
               <input type="submit" value="Modificar" />
+              
+              {mensaje && (
+                <div className={`reg-mensaje-${mensaje.tipo}`}>
+                  {mensaje.texto}
+                </div>
+              )}
             </form>
           </div>
         </div>
