@@ -93,9 +93,10 @@ function HistorialCompras() {
                     <p><strong>Vendedor:</strong> {compra.nombreVendedor || 'Desconocido'}</p>
                     <p><strong>Fecha:</strong> {new Date(compra.fechaCompra).toLocaleDateString()}</p>
                     <p><strong>Cantidad:</strong> {compra.cantidad}</p>
+                    <p><strong>Precio unitario:</strong> ${compra.precioUnitario}</p>
                     <p><strong>Total:</strong> ${compra.totalProducto}</p>
                     <p><strong>Método de pago:</strong> {compra.metodoPago}</p>
-                    <p><strong>Estado:</strong> {compra.estado}</p>
+                    <p><strong>Estado:</strong> <span className={`HistC-status HistS-status-${compra.estado.toLowerCase().replace(' ', '-')}`}>{compra.estado}</span></p>
                   </div>
                 </div>
               ))
