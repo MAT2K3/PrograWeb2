@@ -14,6 +14,14 @@ function Messages() {
   };
 
   useEffect(() => {
+            document.title = "Mensajes";
+            
+            return () => {
+              document.title = "8BitTreasures";
+            };
+          }, []);
+
+  useEffect(() => {
         const storedUser = localStorage.getItem("usuario");
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
@@ -83,15 +91,13 @@ function Messages() {
               <div className="Msg-message Msg-sent">
                 <p><strong>Tú:</strong> ¡Todo bien! ¿Y tú?</p>
               </div>
-              {/* Puedes agregar más mensajes aquí */}
             </div>
 
-            <form className="Msg-message-form" action="#" method="POST">
+            <form className="Msg-message-form">
               <input
                 type="text"
                 name="mensaje"
                 placeholder="Escribe un mensaje..."
-                required
               />
               <button type="submit">Enviar</button>
             </form>
@@ -100,7 +106,7 @@ function Messages() {
       </main>
 
       <footer>
-        <p>&copy; 2025 8BitTreasures. Todos los derechos reservados.</p>
+        <p>© 2025 8BitTreasures. Todos los derechos reservados.</p>
       </footer>
     </div>
   );
