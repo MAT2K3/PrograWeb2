@@ -286,3 +286,33 @@ body {
   text-align: center;
   border: 1px solid #000000;
 }
+
+.HistS-status {
+  padding: 2px 8px;
+  border: 2px inset #f3f3f3;
+  font-size: xx-small;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.HistS-status-pendiente {
+  background-color: #ffff99;
+  color: #666600;
+}
+
+.HistS-status-en-camino {
+  background-color: #99ccff;
+  color: #003366;
+}
+
+.HistS-status-entregado {
+  background-color: #99ff99;
+  color: #006600;
+}
+
+.HistS-status-cancelado {
+  background-color: #ff9999;
+  color: #660000;
+}
