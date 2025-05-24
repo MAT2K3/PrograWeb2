@@ -71,8 +71,8 @@ function BusquedaAvanzada() {
     }
   
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Asegura que el mes sea de 2 dígitos
-    const day = date.getDate().toString().padStart(2, "0"); // Asegura que el día sea de 2 dígitos
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
   
     return `${year}-${month}-${day}`;
   };

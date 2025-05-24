@@ -14,14 +14,12 @@ const validarContrasena = (password) => {
   return { esValida, requisitos };
 };
 
-// Función para validar fecha de nacimiento
 const validarFechaNacimiento = (fecha) => {
   const fechaNac = new Date(fecha);
   const hoy = new Date();
   const hace100Anos = new Date();
   hace100Anos.setFullYear(hoy.getFullYear() - 100);
 
-  // Resetear horas para comparación de fechas solamente
   hoy.setHours(0, 0, 0, 0);
   fechaNac.setHours(0, 0, 0, 0);
 
@@ -43,12 +41,10 @@ const registerUser = async (req, res) => {
     const avatar = req.file ? `/uploads/${req.file.filename}` : null;
     const extension = req.file ? req.file.mimetype.split("/")[1] : null;
 
-    // Validación 1: Campos obligatorios
     if (!username || !nombres || !apllpat || !apllmat || !correo || !contra || !fechanacimiento || !rol) {
       return res.status(400).json({ message: "Todos los campos obligatorios deben ser enviados." });
     }
 
-    // Validación 2: Campos vacíos (después de trim)
     const campos = { username, nombres, apllpat, apllmat, correo, contra, rol };
     for (const [campo, valor] of Object.entries(campos)) {
       if (!valor.toString().trim()) {
@@ -60,30 +56,25 @@ const registerUser = async (req, res) => {
       }
     }
 
-    // Validación 3: Avatar obligatorio
     if (!avatar) {
       return res.status(400).json({ message: "Debes seleccionar una imagen de perfil." });
     }
 
-    // Validación 4: Username único
     const existingUsername = await User.findOne({ username: username.trim() });
     if (existingUsername) {
       return res.status(400).json({ message: "El nombre de usuario ya está en uso." });
     }
 
-    // Validación 5: Correo único
     const existingEmail = await User.findOne({ correo: correo.trim().toLowerCase() });
     if (existingEmail) {
       return res.status(400).json({ message: "El correo electrónico ya está registrado." });
     }
 
-    // Validación 6: Formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(correo.trim())) {
       return res.status(400).json({ message: "El formato del correo electrónico no es válido." });
     }
 
-    // Validación 7: Contraseña fuerte
     const { esValida: passwordValida, requisitos } = validarContrasena(contra);
     if (!passwordValida) {
       let mensajeError = "La contraseña debe cumplir con los siguientes requisitos: ";
@@ -99,13 +90,11 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: mensajeError });
     }
 
-    // Validación 8: Fecha de nacimiento
     const { esValida: fechaValida, mensaje: mensajeFecha } = validarFechaNacimiento(fechanacimiento);
     if (!fechaValida) {
       return res.status(400).json({ message: mensajeFecha });
     }
 
-    // Validación 9: Rol válido
     if (!['comprador', 'vendedor'].includes(rol.toLowerCase())) {
       return res.status(400).json({ message: "El rol debe ser 'comprador' o 'vendedor'." });
     }
@@ -125,7 +114,6 @@ const registerUser = async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    // Crear carrito para compradores
     if (rol.toLowerCase() === "comprador") {
       const newCart = new Cart({
         usuario: savedUser._id,
@@ -139,7 +127,6 @@ const registerUser = async (req, res) => {
   } catch (error) {
     console.error("🚨 Error en el servidor:", error);
     
-    // Manejar errores específicos de MongoDB
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
       const fieldName = field === 'username' ? 'nombre de usuario' : 
@@ -159,14 +146,12 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Se requieren el usuario y la contraseña" });
     }
 
-    // Busca por el campo `username` que tú estás usando
     const user = await User.findOne({ username: usuario });
 
     if (!user) {
       return res.status(401).json({ message: "Usuario no encontrado" });
     }
 
-    // Verifica la contraseña (esto es sin hash, cuidado en producción)
     if (user.contra !== contra) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
@@ -205,13 +190,11 @@ const updateUser = async (req, res) => {
       fechanacimiento,
     } = req.body;
 
-    // Verificar que el usuario existe
     const existingUser = await User.findById(userId);
     if (!existingUser) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Verificar qué datos estamos recibiendo
     console.log("Datos recibidos para actualizar:");
     console.log({
       nombres,
@@ -221,7 +204,6 @@ const updateUser = async (req, res) => {
       fechanacimiento,
     });
 
-    // Validación 1: Campos obligatorios no pueden estar vacíos
     const campos = { nombres: 'Nombre', apllpat: 'Apellido Paterno', apllmat: 'Apellido Materno', contra: 'Contraseña', fechanacimiento: 'Fecha de Nacimiento' };
     
     for (const [campo, nombre] of Object.entries(campos)) {
@@ -233,7 +215,6 @@ const updateUser = async (req, res) => {
       }
     }
 
-    // Validación 2: Contraseña fuerte
     const { esValida: passwordValida, requisitos } = validarContrasena(contra);
     if (!passwordValida) {
       let mensajeError = "La contraseña debe cumplir con los siguientes requisitos: ";
@@ -249,7 +230,6 @@ const updateUser = async (req, res) => {
       return res.status(400).json({ message: mensajeError });
     }
 
-    // Validación 3: Fecha de nacimiento
     const { esValida: fechaValida, mensaje: mensajeFecha } = validarFechaNacimiento(fechanacimiento);
     if (!fechaValida) {
       return res.status(400).json({ message: mensajeFecha });
@@ -258,7 +238,6 @@ const updateUser = async (req, res) => {
     const avatar = req.file ? `/uploads/${req.file.filename}` : undefined;
     const extension = req.file ? req.file.mimetype.split("/")[1] : undefined;
 
-    // Solo actualizar los campos permitidos (NO username ni correo)
     const updatedFields = {
       nombres: nombres.trim(),
       apllpat: apllpat.trim(),
@@ -267,7 +246,6 @@ const updateUser = async (req, res) => {
       fechanacimiento,
     };
 
-    // Solo actualiza el avatar si se subió uno nuevo
     if (avatar) {
       updatedFields.avatar = avatar;
       updatedFields.extension = extension;

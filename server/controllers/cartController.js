@@ -4,7 +4,7 @@ const Product = require("../model/productos");
 
 const addToCart = async (req, res) => {
   try {
-    console.log("Request body:", req.body); // Depuración para ver qué datos llegan
+    console.log("Request body:", req.body);
     const { userId, productId, cantidad } = req.body;
 
     if (!userId || !productId || !cantidad) {
@@ -12,29 +12,24 @@ const addToCart = async (req, res) => {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
 
-    // Validar que el producto exista
     const producto = await Product.findById(productId);
     if (!producto) {
       return res.status(404).json({ message: "Producto no encontrado." });
     }
 
-    // Verificar disponibilidad inicial
     if (producto.disponibles && cantidad > producto.disponibles) {
       return res.status(400).json({ message: "No hay suficientes unidades disponibles." });
     }
 
-    // Buscar o crear el carrito del usuario
     let carrito = await Cart.findOne({ usuario: userId });
     if (!carrito) {
       carrito = new Cart({ usuario: userId, productos: [] });
-      await carrito.save(); // Guardar el carrito vacío
+      await carrito.save();
       console.log("Carrito nuevo creado para el usuario:", userId);
     }
 
-    // Verificar si el producto ya está en el carrito
     let itemExistente = null;
     
-    // Si el carrito tiene productos, verificar cada uno
     if (carrito.productos && carrito.productos.length > 0) {
       for (const itemId of carrito.productos) {
         const item = await CartItem.findById(itemId);
@@ -48,7 +43,6 @@ const addToCart = async (req, res) => {
     if (itemExistente) {
       console.log("Producto ya existe en el carrito, validando cantidad total");
       
-      // VALIDACIÓN CLAVE: Verificar que la cantidad total no exceda los disponibles
       const cantidadTotal = itemExistente.cantidad + parseInt(cantidad);
       
       if (producto.disponibles && cantidadTotal > producto.disponibles) {
@@ -97,7 +91,7 @@ const getCartByUser = async (req, res) => {
       path: "productos",
       match: { activo: true },
       populate: {
-        path: "producto", // esto hace populate del producto dentro del CartItem
+        path: "producto",
         model: "Product"
       }
     });

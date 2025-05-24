@@ -41,7 +41,6 @@ function AdminPurchases() {
 
       try {
         const { data } = await axios.get(`/api/buys/admin/todas`);
-        // Filtrar solo las compras que están en estado "Pendiente" o "En camino"
         const comprasFiltradas = data.compras.filter(compra => 
           compra.estado === "Pendiente" || compra.estado === "En camino"
         );
@@ -61,13 +60,11 @@ function AdminPurchases() {
         nuevoEstado: nuevoEstado
       });
 
-      // Si el nuevo estado es "Entregado" o "Cancelado", remover la compra de la lista
       if (nuevoEstado === "Entregado" || nuevoEstado === "Cancelado") {
         setCompras(prevCompras => 
           prevCompras.filter(compra => compra.compraId !== compraId)
         );
       } else {
-        // Actualizar el estado local para otros estados
         setCompras(prevCompras => 
           prevCompras.map(compra => 
             compra.compraId === compraId 

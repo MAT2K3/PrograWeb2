@@ -4,7 +4,6 @@ const registrarProducto = async (req, res) => {
   try {
     const { title, description, price, available, platform, consoleType, user_id } = req.body;
 
-    // Validaciones del backend
     if (!title || title.trim() === '') {
       return res.status(400).json({ message: "El título es obligatorio." });
     }
@@ -48,7 +47,7 @@ const registrarProducto = async (req, res) => {
 
 const obtenerProductosPorUsuario = async (req, res) => {
   try {
-    const { user_id } = req.params; // lo recibiremos por params
+    const { user_id } = req.params;
   
     const productos = await Product.find({ publicador: user_id });
   
@@ -64,12 +63,10 @@ const getProductosFiltrados = async (req, res) => {
     const { nombre, fecha_inicio, fecha_fin, vendedor, plataforma } = req.query;
     let filtro = {};
 
-    // Filtrar por nombre
     if (nombre) {
-      filtro.nombre = { $regex: nombre, $options: "i" }; // Búsqueda insensible a mayúsculas
+      filtro.nombre = { $regex: nombre, $options: "i" };
     }
 
-    // Filtrar por fechas (fechapublicado)
     if (fecha_inicio && fecha_fin) {
       filtro.fechapublicado = { $gte: new Date(fecha_inicio), $lte: new Date(fecha_fin) };
     } else if (fecha_inicio) {
@@ -78,20 +75,16 @@ const getProductosFiltrados = async (req, res) => {
       filtro.fechapublicado = { $lte: new Date(fecha_fin) };
     }
 
-    // Filtrar por vendedor (publicador)
     if (vendedor) {
-      filtro.publicador = vendedor; // Asegúrate de pasar el ObjectId de un vendedor
+      filtro.publicador = vendedor;
     }
 
-    // Filtrar por plataforma
     if (plataforma) {
       filtro.plataforma = plataforma;
     }
 
-    // Obtener los productos filtrados desde la base de datos
     const productos = await Product.find(filtro);
 
-    // Responder con los productos encontrados
     res.status(200).json(productos);
   } catch (error) {
     console.error("❌ Error al obtener productos filtrados:", error);
@@ -113,27 +106,22 @@ const getProductoPorId = async (req, res) => {
   }
 };
 
-// Nueva función para incrementar la cantidad disponible
 const incrementarCantidadDisponible = async (req, res) => {
   try {
     const { id } = req.params;
     const { cantidad } = req.body;
 
-    // Validar que la cantidad sea un número positivo
     if (!cantidad || parseInt(cantidad) <= 0) {
       return res.status(400).json({ message: "La cantidad debe ser un número mayor que 0." });
     }
 
-    // Buscar el producto por ID
     const producto = await Product.findById(id);
     if (!producto) {
       return res.status(404).json({ message: "Producto no encontrado." });
     }
 
-    // Incrementar la cantidad disponible
     producto.disponibles += parseInt(cantidad);
     
-    // Guardar los cambios
     await producto.save();
 
     res.status(200).json({ 
@@ -146,10 +134,4 @@ const incrementarCantidadDisponible = async (req, res) => {
   }
 };
 
-module.exports = { 
-  registrarProducto, 
-  obtenerProductosPorUsuario, 
-  getProductosFiltrados, 
-  getProductoPorId,
-  incrementarCantidadDisponible
-};
+module.exports = { registrarProducto, obtenerProductosPorUsuario, getProductosFiltrados, getProductoPorId,incrementarCantidadDisponible};

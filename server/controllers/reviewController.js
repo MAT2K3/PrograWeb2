@@ -12,7 +12,7 @@ const actualizarCalificacionPromedio = async (productId) => {
     
     const totalCalificacion = reviews.reduce((sum, review) => sum + review.calificacion, 0);
     const promedio = totalCalificacion / reviews.length;
-    const promedioRedondeado = Math.round(promedio * 10) / 10; // Redondear a 1 decimal
+    const promedioRedondeado = Math.round(promedio * 10) / 10;
     
     await Product.findByIdAndUpdate(productId, { calificacionPromedio: promedioRedondeado });
     return promedioRedondeado;
@@ -22,26 +22,22 @@ const actualizarCalificacionPromedio = async (productId) => {
   }
 };
 
-// Crear una nueva reseña
 const crearReseña = async (req, res) => {
   try {
     const { usuario, producto, comentario, calificacion } = req.body;
     
-    // Validar que todos los campos requeridos estén presentes
     if (!usuario || !producto || !comentario || !calificacion) {
       return res.status(400).json({ 
         message: 'Todos los campos son requeridos' 
       });
     }
     
-    // Validar que la calificación esté en el rango correcto
     if (calificacion < 1 || calificacion > 5) {
       return res.status(400).json({ 
         message: 'La calificación debe estar entre 1 y 5' 
       });
     }
     
-    // Verificar si el usuario ya dejó una reseña para este producto
     const reseñaExistente = await Review.findOne({ 
       usuario: usuario, 
       producto: producto 
@@ -53,7 +49,6 @@ const crearReseña = async (req, res) => {
       });
     }
     
-    // Verificar que el producto existe
     const productoExiste = await Product.findById(producto);
     if (!productoExiste) {
       return res.status(404).json({ 
@@ -61,7 +56,6 @@ const crearReseña = async (req, res) => {
       });
     }
     
-    // Crear la nueva reseña
     const nuevaReseña = new Review({
       usuario,
       producto,
@@ -71,10 +65,8 @@ const crearReseña = async (req, res) => {
     
     const reseñaGuardada = await nuevaReseña.save();
     
-    // Actualizar la calificación promedio del producto
     await actualizarCalificacionPromedio(producto);
     
-    // Poblar los datos del usuario para la respuesta
     await reseñaGuardada.populate('usuario', 'username avatar');
     
     res.status(201).json({
@@ -90,14 +82,13 @@ const crearReseña = async (req, res) => {
   }
 };
 
-// Obtener todas las reseñas de un producto
 const obtenerReseñasProducto = async (req, res) => {
   try {
     const { productId } = req.params;
     
     const reseñas = await Review.find({ producto: productId })
       .populate('usuario', 'username avatar')
-      .sort({ fecha: -1 }); // Ordenar por fecha descendente (más recientes primero)
+      .sort({ fecha: -1 });
     
     res.status(200).json({
       reseñas,

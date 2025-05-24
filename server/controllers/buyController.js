@@ -114,15 +114,14 @@ const obtenerComprasPorComprador = async (req, res) => {
         path: "productos.vendedor", 
         select: "username"
       })
-      .sort({ fechaCompra: -1 }); // Ordenar por fecha más reciente
+      .sort({ fechaCompra: -1 });
 
-    // Transformar los datos para mostrar cada producto por separado
     const historialCompras = [];
 
     compras.forEach(compra => {
       compra.productos.forEach(prod => {
         historialCompras.push({
-          _id: `${compra._id}_${prod.producto._id}`, // ID único para cada item
+          _id: `${compra._id}_${prod.producto._id}`,
           nombreProducto: prod.producto.nombre,
           fotoProducto: prod.producto.foto,
           nombreVendedor: prod.vendedor.username,
@@ -158,16 +157,15 @@ const obtenerTodasLasCompras = async (req, res) => {
         path: "comprador",
         select: "username"
       })
-      .sort({ fechaCompra: -1 }); // Ordenar por fecha más reciente
+      .sort({ fechaCompra: -1 });
 
-    // Transformar los datos para mostrar cada producto por separado
     const todasLasCompras = [];
 
     compras.forEach(compra => {
       compra.productos.forEach(prod => {
         todasLasCompras.push({
-          _id: `${compra._id}_${prod.producto._id}`, // ID único para cada item
-          compraId: compra._id, // ID de la compra original para actualizar estado
+          _id: `${compra._id}_${prod.producto._id}`,
+          compraId: compra._id,
           nombreProducto: prod.producto.nombre,
           fotoProducto: prod.producto.foto,
           nombreVendedor: prod.vendedor.username,
@@ -196,7 +194,6 @@ const actualizarEstadoCompra = async (req, res) => {
     const { compraId } = req.params;
     const { nuevoEstado } = req.body;
 
-    // Validar que el estado sea válido
     const estadosValidos = ["Pendiente", "En camino", "Entregado", "Cancelado"];
     if (!estadosValidos.includes(nuevoEstado)) {
       return res.status(400).json({ message: "Estado inválido." });
