@@ -410,3 +410,39 @@ footer {
     text-align: center;
     border: 1px solid #000000;
 }
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+
+  .Msg-container-inner,
+  .Msg-container-inner-right {
+    width: 95% !important;
+    margin: 10px auto;
+  }
+
+  .Msg-profile-box {
+    width: 100%;
+    padding: 10px;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header nav ul {
+    flex-direction: column;
+  }
+
+  .Msg-second-nav ul li {
+    display: block;
+    margin: 10px 0;
+    border-right: none;
+  }
+
+  footer ul {
+    flex-direction: column;
+  }
+}

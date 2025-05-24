@@ -229,7 +229,11 @@ function Registro() {
             {mensaje.texto}
           </div>
         )}
+        
       </form>
+      <div className="register-link">
+        <p>¿Ya tienes una cuenta? <Link to="/InicioSesion">Inicía Sesión</Link></p>
+      </div>
     </div>
   );
 }

@@ -409,21 +409,21 @@ footer {
   }
 
   header {
-flex-direction: column;
-align-items: flex-start;
-}
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-header nav ul {
-flex-direction: column;
-}
+  header nav ul {
+    flex-direction: column;
+  }
 
-.HistC-second-nav ul li {
-display: block;
-margin: 10px 0;
-border-right: none;
-}
+  .HistC-second-nav ul li {
+    display: block;
+    margin: 10px 0;
+    border-right: none;
+  }
 
-footer ul {
-flex-direction: column;
-}
+  footer ul {
+    flex-direction: column;
+  }
 }
