@@ -271,19 +271,31 @@ function Product() {
               </div>
             )}
             {usuario && usuario.rol === 'comprador' && usuario._id !== producto.publicador._id && (
-              <form onSubmit={handleAddToCart}>
-                <label htmlFor="cantidad">Cantidad:</label>
-                <select id="cantidad" name="cantidad" value={cantidad} onChange={handleCantidadChange}>
-                  {Array.from({ length: producto.disponibles }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-                <button type="submit" className="Prod-add-to-cart-button" disabled={addingToCart}>
-                  {addingToCart ? 'Agregando...' : 'Agregar al carrito'}
-                </button>
-              </form>
+            <>
+              {producto.disponibles < 1 ? (
+                <div className="out-of-stock-message">
+                  <p>Producto sin stock disponible</p>
+                </div>
+              ) : (
+                <form onSubmit={handleAddToCart}>
+                  <label htmlFor="cantidad">Cantidad:</label>
+                  <select id="cantidad" name="cantidad" value={cantidad} onChange={handleCantidadChange}>
+                    {Array.from({ length: producto.disponibles }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                  <button 
+                    type="submit" 
+                    className="Prod-add-to-cart-button" 
+                    disabled={addingToCart || producto.disponibles < 1}
+                  >
+                    {addingToCart ? 'Agregando...' : 'Agregar al carrito'}
+                  </button>
+                </form>
+                )}
+            </>
             )}
           </div>
 

@@ -36,7 +36,7 @@ function Messages() {
         <header>
           <img className="Msg-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a onClick={cerrarSesion}>Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar Sesión</a>
           </nav>
         </header>
 

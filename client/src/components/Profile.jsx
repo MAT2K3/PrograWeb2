@@ -223,7 +223,7 @@ function Profile() {
         <header>
           <img className="Prfl-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a onClick={cerrarSesion}>Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar Sesión</a>
           </nav>
         </header>
         <nav className="Pub-second-nav">

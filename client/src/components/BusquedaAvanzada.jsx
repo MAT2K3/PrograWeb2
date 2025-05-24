@@ -83,7 +83,7 @@ function BusquedaAvanzada() {
         <header>
           <img className="BA-logo-image" src="logo.png" alt="Logo" />
           <nav>
-            <a onClick={cerrarSesion}>Cerrar sesión</a>
+            <a onClick={cerrarSesion}>Cerrar Sesión</a>
           </nav>
         </header>
         <nav className="BA-second-nav">
@@ -146,11 +146,12 @@ function BusquedaAvanzada() {
                 ))}
               </select>
 
+              <br></br>
               <label htmlFor="BA-category">Plataforma:</label>
               <select id="BA-category" name="platforma" value={plataforma} onChange={(e) => setPlataforma(e.target.value)}>
               <option value="">General</option>
                 <option value="nintendo">Nintendo</option>
-                <option value="sega">Sega</option>
+                <option value="sony">Sony</option>
                 <option value="microsoft">Microsoft</option>
               </select>
 

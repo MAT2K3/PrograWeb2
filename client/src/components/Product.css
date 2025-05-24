@@ -228,6 +228,15 @@ body {
   padding: 5px;
 }
 
+.Prod-product-detail p a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.Prod-product-detail p a:hover {
+  text-decoration: underline;
+}
+
 .Prod-product-detail h2 {
   background-color: #5d6d7e;
   color: white;
